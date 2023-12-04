@@ -1,10 +1,7 @@
 require('dotenv').config()
 
 const express = require('express')
-
 const app = express()
-const http = require('http').Server(app)
-const io = require('socket.io')(http)
 
 const router = require('./src/routes/routes')
 
@@ -22,13 +19,6 @@ app.use(express.urlencoded({ extended: false }))
 app.use('/', router)
 app.use('/docs', swaggerUI.serve, swaggerUI.setup(swaggerSpec))
 
-http.listen(port, () => {
+app.listen(port, () => {
     console.log(`Example app listening on port ${port}`)
-})
-
-io.on('connect', (socket)=>{
-    console.log('user conected')
-    socket.on('chat',(data)=>{
-        io.sockets.emit('chat',data)
-    })
 })
