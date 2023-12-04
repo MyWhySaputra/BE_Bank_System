@@ -28,8 +28,11 @@ const swaggerDefinition = {
         }
     },
     apis: [
-        './routes/v1/auth.route.js',
-        './routes/v1/user.route.js',
+        './src/routes/v2/auth.route.js',
+        './src/routes/v2/admin.route.js',
+        './src/routes/v2/user.route.js',
+        './src/routes/v2/bank.account.route.js',
+        './src/routes/v2/transaction.route.js',
     ],
 
 }
