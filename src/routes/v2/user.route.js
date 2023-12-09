@@ -27,7 +27,7 @@ const multer = require("multer")()
  *                  type: string
  *                password:
  *                  type: string
- *                image:
+ *                profile_picture:
  *                  type: string
  *                  format: binary
  *                identity_type:
@@ -44,7 +44,7 @@ const multer = require("multer")()
  *       500:
  *         description: Internal server error
  */
-router.post('/users/', multer.single("image"), Register)
+router.post('/users/', multer.single("profile_picture"), Register)
 
 /**
  * @swagger
@@ -75,7 +75,7 @@ router.get('/users/', Auth, Get)
  *     requestBody:
  *        required: true
  *        content:
- *          application/json:
+ *          multipart/form-data:
  *            schema:
  *              type: object
  *              properties:
@@ -85,7 +85,7 @@ router.get('/users/', Auth, Get)
  *                  type: string
  *                password:
  *                  type: string
- *                images:
+ *                profile_picture:
  *                  type: string
  *                  format: binary
  *                identity_type:
@@ -100,7 +100,7 @@ router.get('/users/', Auth, Get)
  *       400:
  *         description: Bad request
  */
-router.put('/users/', Auth, multer.single("image"), Update)
+router.put('/users/', Auth, multer.single("profile_picture"), Update)
 
 /**
  * @swagger
