@@ -205,6 +205,65 @@ async function Update(req, res) {
     }
 }
 
+async function Delete(req, res) {
+
+    const { email } = req.params
+
+    if (email !== req.user.email) {
+        let resp = ResponseTemplate(null, 'email not same', null, 400)
+        res.status(400).json(resp)
+        return
+    }
+
+    try {
+
+        const user = await prisma.bankAccounts.findUnique({
+            where: {
+                user_id: Number(req.user.id)
+            }
+        })
+
+        await prisma.transactions.deleteMany({
+            where: {
+                source_bank_number: user.bank_account_number
+            }
+        })
+
+        await prisma.transactions.deleteMany({
+            where: {
+                destination_bank_number: user.bank_account_number
+            }
+        })
+
+        await prisma.bankAccounts.delete({
+            where: {
+                user_id: Number(req.user.id)
+            }
+        })
+
+        await prisma.profile.delete({
+            where: {
+                user_id: Number(id)
+            },
+        })
+
+        await prisma.user.delete({
+            where: {
+                id: Number(id)
+            },
+        })
+
+        let resp = ResponseTemplate(null, 'data deleted', null, 200)
+        res.status(200).json(resp)
+        return
+
+    } catch (error) {
+        let resp = ResponseTemplate(null, 'internal server error', error, 500)
+        res.status(500).json(resp)
+        return
+    }
+}
+
 module.exports = {
     Register,
     Get,

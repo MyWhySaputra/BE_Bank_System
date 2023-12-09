@@ -13,11 +13,11 @@ const multer = require("multer")()
  *      - bearerAuth: []
  *     tags:
  *      - "User"
- *     summary: example to create user
+ *     summary: example to register user
  *     requestBody:
  *        required: true
  *        content:
- *          application/json:
+ *          multipart/form-data:
  *            schema:
  *              type: object
  *              properties:
@@ -27,6 +27,9 @@ const multer = require("multer")()
  *                  type: string
  *                password:
  *                  type: string
+ *                image:
+ *                  type: string
+ *                  format: binary
  *                identity_type:
  *                  type: string
  *                identity_number:
@@ -45,7 +48,7 @@ router.post('/users/', multer.single("image"), Register)
 
 /**
  * @swagger
- * /api/v2/users/:
+ * /api/v2/users:
  *   get:
  *     security:
  *      - bearerAuth: []
@@ -62,20 +65,13 @@ router.get('/users/', Auth, Get)
 
 /**
  * @swagger
- * /api/v2/users/:
+ * /api/v2/users:
  *   put:
  *     security:
  *      - bearerAuth: []
  *     tags:
  *      - "User"
- *     summary: Get one user
- *     parameters:
- *       - in: path
- *         name: id
- *         required: true
- *         description: The ID of the user
- *         schema:
- *           type: integer
+ *     summary: Update user
  *     requestBody:
  *        required: true
  *        content:
@@ -89,6 +85,9 @@ router.get('/users/', Auth, Get)
  *                  type: string
  *                password:
  *                  type: string
+ *                images:
+ *                  type: string
+ *                  format: binary
  *                identity_type:
  *                  type: string
  *                identity_number:
@@ -105,7 +104,7 @@ router.put('/users/', Auth, multer.single("image"), Update)
 
 /**
  * @swagger
- * /api/v2/users/{id}:
+ * /api/v2/users/{email}:
  *   delete:
  *     security:
  *      - bearerAuth: []
@@ -114,17 +113,17 @@ router.put('/users/', Auth, multer.single("image"), Update)
  *     summary: Get one user
  *     parameters:
  *       - in: path
- *         name: id
+ *         name: email
  *         required: true
- *         description: The ID of the user
+ *         description: The email of user
  *         schema:
- *           type: integer
+ *           type: string
  *     responses:
  *       200:
  *         description: Successful response
  *       404:
  *         description: Not found
  */
-router.delete('/users/:id', Auth, Delete)
+router.delete('/users/:email', Auth, Delete)
 
 module.exports = router
