@@ -96,73 +96,7 @@ async function Register(req, res) {
 
 async function Get(req, res) {
 
-    const { name, email, password, page = 1, limit = 10 } = req.query
-
-    const payload = {}
-
-    if (name) payload.name = name
-    if (email) payload.email = email
-    if (password) payload.password = password
-
-    try {
-        const skip = ( page - 1 ) * limit
-
-        //informasi total data keseluruhan 
-        const resultCount = await prisma.user.count() // integer jumlah total data user
-
-        //generated total page
-        const totalPage = Math.ceil( resultCount / limit)
-
-        const users = await prisma.user.findMany({
-            //take : 10,
-            take : parseInt(limit),
-            //skip : 10
-            skip:skip,
-            where: payload,
-            select: {
-                id: true,
-                name: true,
-                email: true,
-                profile: {
-                    select: {
-                        identity_type: true,
-                        identity_number: true,
-                        address: true
-                    }
-                }
-            },
-        });
-        
-        const pagination = {
-            current_page: page - 0, // ini - 0 merubah menjadi integer
-            total_page : totalPage,
-            total_data: resultCount,
-            data: users
-        }
-        const cekUser = (objectName) => {
-            return Object.keys(objectName).length === 0
-        }
-        
-        if (cekUser(users) === true) {
-            let resp = ResponseTemplate(null, 'data not found', null, 404)
-            res.json(resp)
-            return
-        }
-
-        let resp = ResponseTemplate(pagination, 'success', null, 200)
-        res.json(resp)
-        return
-
-    } catch (error) {
-        let resp = ResponseTemplate(null, 'internal server error', error, 500)
-        res.json(resp)
-        return
-    }
-}
-
-async function GetByPK(req, res) {
-
-    const { id } = req.params
+    const id = req.user.id
 
     try {
         const users = await prisma.user.findUnique({
@@ -175,6 +109,7 @@ async function GetByPK(req, res) {
                 email: true,
                 profile: {
                     select: {
+                        profile_picture: true,
                         identity_type: true,
                         identity_number: true,
                         address: true
@@ -185,56 +120,72 @@ async function GetByPK(req, res) {
 
         if (users === null) {
             let resp = ResponseTemplate(null, 'data not found', null, 404)
-            res.json(resp)
+            res.status(404).json(resp)
             return
         }
 
         let resp = ResponseTemplate(users, 'success', null, 200)
-        res.json(resp)
+        res.status(200).json(resp)
         return
 
     } catch (error) {
         let resp = ResponseTemplate(null, 'internal server error', error, 500)
-        res.json(resp)
+        res.status(500).json(resp)
         return
     }
 }
 
 async function Update(req, res) {
 
-    const { name, email, password, identity_type, identity_number, address } = req.body
-    const { id } = req.params
+    const { name, email, password, profile_picture, identity_type, identity_number, address } = req.body
+    const id = req.user.id
 
     const payload = {}
     const update = {}
     const profile = {update}
 
-    if (!name && !email && !password && !identity_type && !identity_number && !address) {
+    if (!name && !email && !password && !profile_picture && !identity_type && !identity_number && !address) {
         let resp = ResponseTemplate(null, 'bad request', null, 400)
-        res.json(resp)
+        res.status(400).json(resp)
         return
     }
 
     if (name) payload.name = name
     if (email) payload.email = email
     if (password) payload.password = password
-    if (identity_type || identity_number || address) payload.profile = profile
+    if (profile_picture || identity_type || identity_number || address) payload.profile = profile
+    if (profile_picture) update.profile_picture = profile_picture
     if (identity_type) update.identity_type = identity_type
     if (identity_number) update.identity_number = identity_number
     if (address) update.address = address
 
     try {
+        const stringFile = req.file.buffer.toString("base64");
+    
+        const uploadFile = await imagekit.upload({
+            fileName: req.file.originalname,
+            file: stringFile,
+        })
+
         const users = await prisma.user.update({
             where: {
                 id: Number(id)
             },
-            data: payload,
+            data: {
+                ...payload,
+                profile: {
+                    update: {
+                        profile_picture: uploadFile.url
+                    }
+                }
+            },
             select: {
                 id: true,
                 name: true,
                 email: true,
                 profile: {
                     select: {
+                        profile_picture: true,
                         identity_type: true,
                         identity_number: true,
                         address: true
@@ -244,62 +195,19 @@ async function Update(req, res) {
         })
 
         let resp = ResponseTemplate(users, 'success', null, 200)
-        res.json(resp)
+        res.status(200).json(resp)
         return
 
     } catch (error) {
         let resp = ResponseTemplate(null, 'internal server error', error, 500)
-        res.json(resp)
+        res.status(500).json(resp)
         return
     }
 }
-
-async function Delete(req, res) {
-
-    const { id } = req.params
-
-    try {
-
-        const checkUser = await prisma.user.findFirst({
-            where: {
-                id: Number(id)
-            }
-        })
-
-        if (checkUser === null) {
-            let resp = ResponseTemplate(null, 'data not found', null, 404)
-            res.json(resp)
-            return
-        }
-
-        await prisma.profile.delete({
-            where: {
-                user_id: Number(id)
-            },
-        })
-
-        await prisma.user.delete({
-            where: {
-                id: Number(id)
-            },
-        })
-
-        let resp = ResponseTemplate(null, 'data deleted', null, 200)
-        res.json(resp)
-        return
-
-    } catch (error) {
-        let resp = ResponseTemplate(null, 'internal server error', error, 500)
-        res.json(resp)
-        return
-    }
-}
-
 
 module.exports = {
     Register,
     Get,
-    GetByPK,
     Update,
     Delete
 }

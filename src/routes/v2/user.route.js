@@ -1,6 +1,6 @@
 const express = require('express')
 const router = express.Router()
-const { Register, Get, GetByPK, Update, Delete } = require('../../controller/user.controller')
+const { Register, Get, Update, Delete } = require('../../controller/user.controller')
 const { Auth } = require('../../middleware/middleware')
 
 const multer = require("multer")()
@@ -51,26 +51,7 @@ router.post('/users/', multer.single("image"), Register)
  *      - bearerAuth: []
  *     tags:
  *      - "User"
- *     summary: Get all user
- *     parameters:
- *       - in: query
- *         name: name
- *         required: false
- *         description: The name of the user
- *         schema:
- *           type: string
- *       - in: query
- *         name: email
- *         required: false
- *         description: The email of the user
- *         schema:
- *           type: string
- *       - in: query
- *         name: password
- *         required: false
- *         description: The password of the user
- *         schema:
- *           type: string
+ *     summary: Check your id
  *     responses:
  *       200:
  *         description: Successful response
@@ -81,31 +62,7 @@ router.get('/users/', Auth, Get)
 
 /**
  * @swagger
- * /api/v2/users/{id}:
- *   get:
- *     security:
- *      - bearerAuth: []
- *     tags:
- *      - "User"
- *     summary: Get one user
- *     parameters:
- *       - in: path
- *         name: id
- *         required: true
- *         description: The ID of the user
- *         schema:
- *           type: integer
- *     responses:
- *       200:
- *         description: Successful response
- *       404:
- *         description: Not found
- */
-router.get('/users/:id', Auth, GetByPK)
-
-/**
- * @swagger
- * /api/v2/users/{id}:
+ * /api/v2/users/:
  *   put:
  *     security:
  *      - bearerAuth: []
@@ -144,7 +101,7 @@ router.get('/users/:id', Auth, GetByPK)
  *       400:
  *         description: Bad request
  */
-router.put('/users/:id', Auth, Update)
+router.put('/users/', Auth, multer.single("image"), Update)
 
 /**
  * @swagger
