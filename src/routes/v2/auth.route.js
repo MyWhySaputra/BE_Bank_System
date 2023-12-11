@@ -28,4 +28,6 @@ const { Login } = require('../../controller/auth.controller')
  */
 router.post('/auth/login', Login)
 
+router.get('/auth/verify-email', verifyEmail)
+
 module.exports = router

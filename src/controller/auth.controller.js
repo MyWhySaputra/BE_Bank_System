@@ -51,6 +51,34 @@ async function Login(req, res) {
     }
 }
 
+async function verifyEmail(req, res) {
+
+    const { email } = req.query
+
+    try {
+
+        await prisma.user.update({
+            where: {
+                email: email
+            },
+            data: {
+                is_verified: true
+            }
+        })
+
+        let resp = ResponseTemplate(null, 'your email has been verified', null, 200)
+        res.status(200).json(resp);
+        return
+
+    } catch (error) {
+        let resp = ResponseTemplate(null, 'internal server error', error, 500)
+        res.status(500).json(resp)
+        return
+
+    }
+}
+
 module.exports = {
-    Login
+    Login,
+    verifyEmail
 }
