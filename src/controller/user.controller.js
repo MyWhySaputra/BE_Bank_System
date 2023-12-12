@@ -3,6 +3,7 @@ const { HashPassword } = require('../helper/hash_pass_helper')
 const { PrismaClient } = require('@prisma/client')
 const prisma = new PrismaClient()
 const imagekit = require('../lib/imagekit')
+const transporter = require('../lib/nodemailer')
 
 async function Register(req, res) {
 
@@ -61,7 +62,15 @@ async function Register(req, res) {
             include: {
                 profile: true
             }
-        });
+        })
+
+        await transporter.sendMail({
+            from: process.env.EMAIL_SMTP, 
+            to: payload.email, 
+            subject: "Verification your email", 
+            text: `Click here to verify your email`,
+            html: `<a href="${process.env.BASE_URL}api/v2/auth/verify-email?email=${payload.email}">Click here to verify your email</a>`,
+        })
 
         const userView = await prisma.user.findUnique({
             where: {
