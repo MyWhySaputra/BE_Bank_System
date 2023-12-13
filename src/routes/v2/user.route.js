@@ -71,7 +71,7 @@ router.get('/users/', Auth, Get)
  *      - "User"
  *     summary: Update user
  *     requestBody:
- *        required: false
+ *        required: true
  *        content:
  *          multipart/form-data:
  *            schema:

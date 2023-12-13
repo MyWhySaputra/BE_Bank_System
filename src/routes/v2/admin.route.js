@@ -73,7 +73,7 @@ router.get('/admins/', Auth, Get)
  *      - "Admin"
  *     summary: Update admin
  *     requestBody:
- *        required: false
+ *        required: true
  *        content:
  *          multipart/form-data:
  *            schema:
