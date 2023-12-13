@@ -1,6 +1,6 @@
 const express = require('express')
 const router = express.Router()
-const { Login } = require('../../controller/auth.controller')
+const { Login, verifyEmail, forgetPassword, resetPassword } = require('../../controller/auth.controller')
 
 /**
  * @swagger
@@ -29,5 +29,14 @@ const { Login } = require('../../controller/auth.controller')
 router.post('/auth/login', Login)
 
 router.get('/auth/verify-email', verifyEmail)
+
+router.post('/auth/forget-password', forgetPassword)
+
+router.get("/auth/reset-password", (req, res) => {
+    req.query.token
+    res.render("reset-password.ejs")
+})
+
+router.put('/auth/reset-password', resetPassword)
 
 module.exports = router
