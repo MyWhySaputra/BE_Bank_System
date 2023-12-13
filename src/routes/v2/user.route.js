@@ -9,8 +9,6 @@ const multer = require("multer")()
  * @swagger
  * /api/v2/users:
  *   post:
- *     security:
- *      - bearerAuth: []
  *     tags:
  *      - "User"
  *     summary: example to register user
@@ -73,7 +71,7 @@ router.get('/users/', Auth, Get)
  *      - "User"
  *     summary: Update user
  *     requestBody:
- *        required: true
+ *        required: false
  *        content:
  *          multipart/form-data:
  *            schema:
@@ -110,7 +108,7 @@ router.put('/users/', Auth, multer.single("profile_picture"), Update)
  *      - bearerAuth: []
  *     tags:
  *      - "User"
- *     summary: Get one user
+ *     summary: Delete user
  *     parameters:
  *       - in: path
  *         name: email
