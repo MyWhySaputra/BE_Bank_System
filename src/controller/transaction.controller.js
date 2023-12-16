@@ -5,8 +5,6 @@ const prisma = new PrismaClient()
 
 async function Insert(req, res) {
 
-    console.log(req.body)
-
     const { source_account_id, destination_account_id, amount } = req.body
 
     const payload = {
