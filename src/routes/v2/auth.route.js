@@ -1,6 +1,6 @@
 const express = require('express')
 const router = express.Router()
-const { Login, verifyEmail, forgetPassword, resetPassword } = require('../../controller/auth.controller')
+const { login, verifyEmail, forgetPassword, resetPassword } = require('../../controller/auth.controller')
 
 /**
  * @swagger
@@ -26,7 +26,7 @@ const { Login, verifyEmail, forgetPassword, resetPassword } = require('../../con
  *       400:
  *         description: Bad request
  */
-router.post('/auth/login', Login)
+router.post('/auth/login', login)
 
 router.get('/auth/verify-email', verifyEmail)
 

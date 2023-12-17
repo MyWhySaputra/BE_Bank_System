@@ -5,7 +5,7 @@ const { PrismaClient } = require('@prisma/client')
 const prisma = new PrismaClient()
 var jwt = require('jsonwebtoken')
 
-async function Login(req, res) {
+async function login(req, res) {
 
     try {
         const { email, password } = req.body
@@ -161,7 +161,7 @@ async function resetPassword(req, res) {
 }
 
 module.exports = {
-    Login,
+    login,
     verifyEmail,
     forgetPassword,
     resetPassword
