@@ -1,7 +1,7 @@
 const express = require('express')
 const router = express.Router()
-const { Insert, Get, GetByPK, Update, Delete } = require('../controller/bank.account.controller')
-const { CheckPostBankAccount, CheckIdBankAccount, Auth } = require('../middleware/middleware')
+const { Insert, Get, GetByPK, Update, Delete } = require('../../controller/bank.account.controller')
+const { Auth } = require('../../middleware/middleware')
 
 /**
  * @swagger
@@ -35,7 +35,7 @@ const { CheckPostBankAccount, CheckIdBankAccount, Auth } = require('../middlewar
  *       404:
  *         description: Not found
  */
-router.post('/bank_accounts/', Auth, CheckPostBankAccount, Insert)
+router.post('/bank_accounts/', Auth, Insert)
 
 /**
  * @swagger
@@ -125,7 +125,7 @@ router.get('/bank_accounts/:id', Auth, GetByPK)
  *       400:
  *         description: Bad request
  */
-router.put('/bank_accounts/:id', Auth, CheckIdBankAccount, Update)
+router.put('/bank_accounts/:id', Auth, Update)
 
 /**
  * @swagger

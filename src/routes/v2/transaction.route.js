@@ -1,7 +1,7 @@
 const express = require('express')
 const router = express.Router()
-const { Insert, Get, GetByPK } = require('../controller/transaction.controller')
-const { CheckPostTransaction, Auth } = require('../middleware/middleware')
+const { Insert, Get, GetByPK } = require('../../controller/transaction.controller')
+const { Auth } = require('../../middleware/middleware')
 
 /**
  * @swagger
@@ -29,7 +29,7 @@ const { CheckPostTransaction, Auth } = require('../middleware/middleware')
  *       200:
  *         description: Successful response
  */
-router.post('/transactions/', Auth, CheckPostTransaction, Insert)
+router.post('/transactions/', Auth, Insert)
 
 /**
  * @swagger
