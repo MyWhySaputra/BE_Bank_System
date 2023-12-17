@@ -32,8 +32,7 @@ router.get('/auth/verify-email', verifyEmail)
 
 router.post('/auth/forget-password', forgetPassword)
 
-router.get("/auth/reset-password", (req, res) => {
-    req.query.token
+router.get("/auth/reset-password", (res) => {
     res.render("reset-password.ejs")
 })
 

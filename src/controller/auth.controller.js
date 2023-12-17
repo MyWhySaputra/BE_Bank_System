@@ -109,6 +109,8 @@ async function forgetPassword(req, res) {
             html: `Copy this link = ${process.env.BASE_URL}api/v1/auth/reset-password?token=${token}`,
         })
 
+        // res.render('reset_password', { email: email, token: token })
+
         let resp = ResponseTemplate(null, 'check your email', null, 200)
         res.status(200).json(resp);
         return
