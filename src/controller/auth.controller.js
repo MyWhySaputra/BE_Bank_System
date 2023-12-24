@@ -21,7 +21,13 @@ async function login(req, res) {
             res.status(400).json(resp)
             return
         }
-
+        
+        if (!checkUser.is_verified) {
+            let resp = ResponseTemplate(null, 'email is not verified', null, 400)
+            res.status(400).json(resp)
+            return
+        }
+        
         const checkPassword = await ComparePassword(password, checkUser.password)
 
         if (!checkPassword) {
