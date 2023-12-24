@@ -4,6 +4,7 @@ const { PrismaClient } = require('@prisma/client')
 const prisma = new PrismaClient()
 const imagekit = require('../lib/imagekit')
 const transporter = require('../lib/nodemailer')
+var jwt = require('jsonwebtoken')
 
 async function Register(req, res) {
 
@@ -55,12 +56,16 @@ async function Register(req, res) {
             }
         })
 
+        const token = jwt.sign({
+            email: email
+        }, process.env.SECRET_KEY)
+
         await transporter.sendMail({
             from: process.env.EMAIL_SMTP, 
             to: email, 
             subject: "Verification your email", 
             text: `Click here to verify your email`,
-            html: `<a href="${process.env.BASE_URL}/api/v2/auth/verify-email?email=${email}">Click here to verify your email</a>`,
+            html: `<a href="${process.env.BASE_URL}/api/v2/auth/verify-email?token=${token}">Click here to verify your email</a>`,
         })
 
         const userView = await prisma.user.findUnique({

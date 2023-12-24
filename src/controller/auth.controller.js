@@ -53,25 +53,15 @@ async function login(req, res) {
 
 async function verifyEmail(req, res) {
 
-    const { email } = req.query
+    const { token } = req.query
 
     try {
 
-        const checkUser = await prisma.user.findUnique({
-            where: {
-                email: email
-            }
-        })
-
-        if (checkUser === null) {
-            let resp = ResponseTemplate(null, 'email is not found or incorrect', null, 400)
-            res.status(400).json(resp)
-            return
-        }
+        const user = await jwt.verify(token, process.env.SECRET_KEY)
 
         await prisma.user.update({
             where: {
-                email: email
+                email: user.email
             },
             data: {
                 is_verified: true
