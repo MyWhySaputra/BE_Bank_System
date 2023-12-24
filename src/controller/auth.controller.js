@@ -27,7 +27,7 @@ async function login(req, res) {
             res.status(400).json(resp)
             return
         }
-        
+
         const checkPassword = await ComparePassword(password, checkUser.password)
 
         if (!checkPassword) {
@@ -104,11 +104,10 @@ async function forgetPassword(req, res) {
         }
 
         const token = jwt.sign({
-            id: checkUser.id,
-            email: checkUser.email,
+            email: checkUser.email
         }, process.env.SECRET_KEY,
             { expiresIn: '1h' }
-        );
+        )
 
         await transporter.sendMail({
             from: process.env.EMAIL_SMTP, 
@@ -133,9 +132,7 @@ async function forgetPassword(req, res) {
 
 async function resetPassword(req, res) {
 
-    const { newPassword } = req.body
-
-    const { token } = req.query
+    const { token, newPassword } = req.body
 
     try {
 
@@ -144,16 +141,10 @@ async function resetPassword(req, res) {
         const encryptedPassword = await HashPassword(newPassword)
 
         await prisma.user.update({
-            where: { id: user.id },
+            where: { email: user.email },
             data: {
                 password: encryptedPassword,
             },
-        })
-
-        await prisma.temp.create({
-            data: {
-                email: user.email
-            }
         })
 
         let resp = ResponseTemplate(null, 'Password reset successfully', null, 200)

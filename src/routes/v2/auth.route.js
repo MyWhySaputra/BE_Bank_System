@@ -32,8 +32,9 @@ router.get('/auth/verify-email', verifyEmail)
 
 router.post('/auth/forget-password', forgetPassword)
 
-router.get("/auth/reset-password", (res) => {
-    res.render("reset-password.ejs")
+router.get("/auth/reset-password", (req, res) => {
+    const token = req.query.token
+    res.render("reset-password.ejs", { token })
 })
 
 router.put('/auth/reset-password', resetPassword)
