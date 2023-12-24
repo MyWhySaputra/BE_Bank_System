@@ -57,6 +57,18 @@ async function verifyEmail(req, res) {
 
     try {
 
+        const checkUser = await prisma.user.findUnique({
+            where: {
+                email: email
+            }
+        })
+
+        if (checkUser === null) {
+            let resp = ResponseTemplate(null, 'email is not found or incorrect', null, 400)
+            res.status(400).json(resp)
+            return
+        }
+
         await prisma.user.update({
             where: {
                 email: email
@@ -66,7 +78,7 @@ async function verifyEmail(req, res) {
             }
         })
 
-        let resp = ResponseTemplate(null, 'your email has been verified', null, 200)
+        let resp = ResponseTemplate(null, 'success, your email has been verified', null, 200)
         res.status(200).json(resp);
         return
 

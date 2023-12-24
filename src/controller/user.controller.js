@@ -7,26 +7,12 @@ const transporter = require('../lib/nodemailer')
 
 async function Register(req, res) {
 
-    const { name, email, password, profile_picture, identity_type, identity_number, address } = req.body
+    const { name, email, password, identity_type, identity_number, address } = req.body
 
     const hashPass = await HashPassword(password)
 
-    const payload = {
-        name,
-        email,
-        password: hashPass,
-        profile: {
-            create: {
-                profile_picture,
-                identity_type,
-                identity_number,
-                address
-            }
-        }
-    }
-
     const emailUser = await prisma.user.findUnique({
-        where: {email: payload.email},
+        where: {email: email},
     });
 
     if (emailUser) {
@@ -52,10 +38,15 @@ async function Register(req, res) {
         
         await prisma.user.create({
             data: {
-                ...payload,
+                name: name,
+                email: email,
+                password: hashPass,
                 profile: {
-                    update: {
-                        profile_picture: uploadFile.url
+                    create: {
+                        profile_picture: uploadFile.url,
+                        identity_type: identity_type,
+                        identity_number: identity_number,
+                        address: address
                     }
                 }
             },
@@ -66,15 +57,15 @@ async function Register(req, res) {
 
         await transporter.sendMail({
             from: process.env.EMAIL_SMTP, 
-            to: payload.email, 
+            to: email, 
             subject: "Verification your email", 
             text: `Click here to verify your email`,
-            html: `<a href="${process.env.BASE_URL}/api/v2/auth/verify-email?email=${payload.email}">Click here to verify your email</a>`,
+            html: `<a href="${process.env.BASE_URL}/api/v2/auth/verify-email?email=${email}">Click here to verify your email</a>`,
         })
 
         const userView = await prisma.user.findUnique({
             where: {
-                email: payload.email
+                email: email
             },
             select: {
                 id: true,
@@ -99,7 +90,6 @@ async function Register(req, res) {
         let resp = ResponseTemplate(null, 'internal server error', error, 500)
         res.status(500).json(resp)
         return
-
     }
 }
 
