@@ -2,9 +2,9 @@ const swaggerDefinition = {
     swaggerDefinition: {
         openapi: '3.0.0',
         info: {
-            title: 'Testing FGA Issue',
+            title: 'Node Bank System',
             version: '1.0.0',
-            description: 'Your API description',
+            description: 'Build Bank System with NodeJS and ExpressJS',
         },
         servers: [
             {
