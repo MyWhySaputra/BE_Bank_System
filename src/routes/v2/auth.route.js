@@ -12,7 +12,7 @@ const { login, verifyEmail, forgetPassword, resetPassword } = require('../../con
  *     requestBody:
  *        required: true
  *        content:
- *          multipart/form-data:
+ *          application/json:
  *            schema:
  *              type: object
  *              properties:
@@ -30,6 +30,28 @@ router.post('/auth/login', login)
 
 router.get('/auth/verify-email', verifyEmail)
 
+/**
+ * @swagger
+ * /api/v2/auth/forget-password:
+ *   post:
+ *     tags:
+ *      - "Auth"
+ *     summary: example to forget password
+ *     requestBody:
+ *        required: true
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                email:
+ *                  type: string
+ *     responses:
+ *       200:
+ *         description: Successful response
+ *       400:
+ *         description: Bad request
+ */
 router.post('/auth/forget-password', forgetPassword)
 
 router.get("/auth/reset-password", (req, res) => {
@@ -37,6 +59,6 @@ router.get("/auth/reset-password", (req, res) => {
     res.render("reset-password.ejs", { token })
 })
 
-router.put('/auth/reset-password', resetPassword)
+router.post('/auth/reset-password', resetPassword)
 
 module.exports = router

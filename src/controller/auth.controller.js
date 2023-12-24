@@ -1,8 +1,9 @@
-const { ComparePassword } = require('../helper/hash_pass_helper')
+const { ComparePassword, HashPassword } = require('../helper/hash_pass_helper')
 const { ResponseTemplate } = require('../helper/template.helper')
 const { PrismaClient } = require('@prisma/client')
 
 const prisma = new PrismaClient()
+const transporter = require('../lib/nodemailer')
 var jwt = require('jsonwebtoken')
 
 async function login(req, res) {
@@ -110,13 +111,11 @@ async function forgetPassword(req, res) {
         )
 
         await transporter.sendMail({
-            from: process.env.EMAIL_SMTP, 
-            to: email, 
+            from: process.env.EMAIL_SMTP,
+            to: email,
             subject: "Reset your password",
-            html: `Copy this link = ${process.env.BASE_URL}api/v1/auth/reset-password?token=${token}`,
+            html: `<a href="${process.env.BASE_URL}/api/v2/auth/reset-password?token=${token}">Click here to reset password</a>`,
         })
-
-        // res.render('reset_password', { email: email, token: token })
 
         let resp = ResponseTemplate(null, 'check your email', null, 200)
         res.status(200).json(resp);
@@ -124,7 +123,6 @@ async function forgetPassword(req, res) {
 
     } catch (error) {
         let resp = ResponseTemplate(null, 'internal server error', error, 500)
-        Sentry.captureException(error)
         res.status(500).json(resp)
         return
     }
@@ -134,16 +132,16 @@ async function resetPassword(req, res) {
 
     const { token, newPassword } = req.body
 
+    const HashNewPass = await HashPassword(newPassword)
+
     try {
 
         const user = await jwt.verify(token, process.env.SECRET_KEY)
 
-        const encryptedPassword = await HashPassword(newPassword)
-
         await prisma.user.update({
             where: { email: user.email },
             data: {
-                password: encryptedPassword,
+                password: HashNewPass,
             },
         })
 
@@ -153,7 +151,6 @@ async function resetPassword(req, res) {
 
     } catch (error) {
         let resp = ResponseTemplate(null, 'internal server error', error, 500)
-        Sentry.captureException(error)
         res.status(500).json(resp)
         return
     }
