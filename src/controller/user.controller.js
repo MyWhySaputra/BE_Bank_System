@@ -141,14 +141,14 @@ async function Get(req, res) {
 
 async function Update(req, res) {
 
-    const { name, email, password, profile_picture, identity_type, identity_number, address } = req.body
+    const { name, email, password, identity_type, identity_number, address } = req.body
     const id = req.user.id
 
     const payload = {}
     const update = {}
     const profile = {update}
 
-    if (!name && !email && !password && !profile_picture && !identity_type && !identity_number && !address) {
+    if (!name && !email && !password && !identity_type && !identity_number && !address) {
         let resp = ResponseTemplate(null, 'bad request', null, 400)
         res.status(400).json(resp)
         return
@@ -157,44 +157,35 @@ async function Update(req, res) {
     if (name) payload.name = name
     if (email) payload.email = email
     if (password) payload.password = password
-    if (profile_picture || identity_type || identity_number || address) payload.profile = profile
-    if (profile_picture) update.profile_picture = profile_picture
+    if (identity_type || identity_number || address) payload.profile = profile
     if (identity_type) update.identity_type = identity_type
     if (identity_number) update.identity_number = identity_number
     if (address) update.address = address
 
     try {
-        const stringFile = req.file.buffer.toString("base64");
-    
-        const uploadFile = await imagekit.upload({
-            fileName: req.file.originalname,
-            file: stringFile,
-        })
+        if (req.file) {
+            const stringFile = req.file.buffer.toString("base64");
+
+            const uploadFile = await imagekit.upload({
+                fileName: req.file.originalname,
+                file: stringFile,
+            });
+
+            if (uploadFile.url) {
+                payload.profile = profile
+                update.profile_picture = uploadFile.url
+            } else {
+                throw new Error('Failed to upload file');
+            }
+        }
 
         const users = await prisma.user.update({
             where: {
                 id: Number(id)
             },
-            data: {
-                ...payload,
-                profile: {
-                    update: {
-                        profile_picture: uploadFile.url
-                    }
-                }
-            },
-            select: {
-                id: true,
-                name: true,
-                email: true,
-                profile: {
-                    select: {
-                        profile_picture: true,
-                        identity_type: true,
-                        identity_number: true,
-                        address: true
-                    }
-                }
+            data: payload,
+            include: {
+                profile: true
             }
         })
 
@@ -203,8 +194,9 @@ async function Update(req, res) {
         return
 
     } catch (error) {
-        let resp = ResponseTemplate(null, 'internal server error', error, 500)
-        res.status(500).json(resp)
+        // let resp = ResponseTemplate(null, 'internal server error', error, 500)
+        // res.status(500).json(resp)
+        console.log(error)
         return
     }
 }
