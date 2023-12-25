@@ -260,7 +260,7 @@ async function Delete(req, res) {
             },
         })
 
-        let resp = ResponseTemplate(null, 'data deleted', null, 200)
+        let resp = ResponseTemplate(null, 'data successfully deleted', null, 200)
         res.status(200).json(resp)
         return
 
