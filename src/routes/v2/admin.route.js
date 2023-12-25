@@ -13,7 +13,7 @@ const multer = require("multer")()
  *      - bearerAuth: []
  *     tags:
  *      - "Admin"
- *     summary: example to register admin
+ *     summary: example to register admin (SUPER ADMIN ONLY)
  *     requestBody:
  *        required: true
  *        content:
