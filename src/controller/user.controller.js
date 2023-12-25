@@ -145,10 +145,12 @@ async function Update(req, res) {
     const id = req.user.id
 
     const payload = {}
-    const update = {}
+    const data = {}
+    const where = { user_id: Number(id) }
+    const update = {where,data}
     const profile = {update}
 
-    if (!name && !email && !password && !identity_type && !identity_number && !address) {
+    if (!name && !email && !password && !req.file && !identity_type && !identity_number && !address) {
         let resp = ResponseTemplate(null, 'bad request', null, 400)
         res.status(400).json(resp)
         return
@@ -158,9 +160,9 @@ async function Update(req, res) {
     if (email) payload.email = email
     if (password) payload.password = password
     if (identity_type || identity_number || address) payload.profile = profile
-    if (identity_type) update.identity_type = identity_type
-    if (identity_number) update.identity_number = identity_number
-    if (address) update.address = address
+    if (identity_type) data.identity_type = identity_type
+    if (identity_number) data.identity_number = identity_number
+    if (address) data.address = address
 
     try {
         if (req.file) {
@@ -173,7 +175,7 @@ async function Update(req, res) {
 
             if (uploadFile.url) {
                 payload.profile = profile
-                update.profile_picture = uploadFile.url
+                data.profile_picture = uploadFile.url
             } else {
                 throw new Error('Failed to upload file');
             }
@@ -184,8 +186,18 @@ async function Update(req, res) {
                 id: Number(id)
             },
             data: payload,
-            include: {
-                profile: true
+            select: {
+                id: true,
+                name: true,
+                email: true,
+                profile: {
+                    select: {
+                        profile_picture: true,
+                        identity_type: true,
+                        identity_number: true,
+                        address: true
+                    }
+                }
             }
         })
 
@@ -194,9 +206,8 @@ async function Update(req, res) {
         return
 
     } catch (error) {
-        // let resp = ResponseTemplate(null, 'internal server error', error, 500)
-        // res.status(500).json(resp)
-        console.log(error)
+        let resp = ResponseTemplate(null, 'internal server error', error, 500)
+        res.status(500).json(resp)
         return
     }
 }
