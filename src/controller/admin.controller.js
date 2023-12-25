@@ -7,7 +7,7 @@ const transporter = require('../lib/nodemailer')
 
 async function Register(req, res) {
 
-    if (req.user.role !== 'ADMIN') {
+    if (req.user.role !== 'SUPER') {
         let resp = ResponseTemplate(null, 'you are not admin', null, 404)
         res.status(404).json(resp)
         return
