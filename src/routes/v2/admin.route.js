@@ -7,7 +7,7 @@ const multer = require("multer")()
 
 /**
  * @swagger
- * /api/v2/admins:
+ * /api/v2/admin:
  *   post:
  *     security:
  *      - bearerAuth: []
@@ -44,11 +44,11 @@ const multer = require("multer")()
  *       500:
  *         description: Internal server error
  */
-router.post('/admins/', multer.single("profile_picture"), Register)
+router.post('/admin/', multer.single("profile_picture"), Register)
 
 /**
  * @swagger
- * /api/v2/admins:
+ * /api/v2/admin:
  *   get:
  *     security:
  *      - bearerAuth: []
@@ -61,11 +61,11 @@ router.post('/admins/', multer.single("profile_picture"), Register)
  *       404:
  *         description: Not found
  */
-router.get('/admins/', Auth, Get)
+router.get('/admin/', Auth, Get)
 
 /**
  * @swagger
- * /api/v2/admins:
+ * /api/v2/admin:
  *   put:
  *     security:
  *      - bearerAuth: []
@@ -100,11 +100,11 @@ router.get('/admins/', Auth, Get)
  *       400:
  *         description: Bad request
  */
-router.put('/admins/', Auth, multer.single("profile_picture"), Update)
+router.put('/admin/', Auth, multer.single("profile_picture"), Update)
 
 /**
  * @swagger
- * /api/v2/admins/{email}:
+ * /api/v2/admin/{email}:
  *   delete:
  *     security:
  *      - bearerAuth: []
@@ -124,6 +124,6 @@ router.put('/admins/', Auth, multer.single("profile_picture"), Update)
  *       404:
  *         description: Not found
  */
-router.delete('/admins/:email', Auth, Delete)
+router.delete('/admin/:email', Auth, Delete)
 
 module.exports = router
