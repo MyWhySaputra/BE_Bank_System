@@ -54,7 +54,7 @@ router.post('/admin/', multer.single("profile_picture"), Register)
  *      - bearerAuth: []
  *     tags:
  *      - "Admin"
- *     summary: Check all id user
+ *     summary: Check your id
  *     responses:
  *       200:
  *         description: Successful response
