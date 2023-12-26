@@ -1,7 +1,41 @@
 const express = require('express')
 const router = express.Router()
-const { Insert, Get, GetByPK, Update, Delete } = require('../../controller/bank.account.controller')
+const { AdminInsert, Insert, Get, GetByPK, Update, Delete } = require('../../controller/bank.account.controller')
 const { Auth } = require('../../middleware/middleware')
+
+/**
+ * @swagger
+ * /api/v2/bank_accounts/admin:
+ *   post:
+ *     security:
+ *      - bearerAuth: []
+ *     tags:
+ *      - "Bank Account"
+ *     summary: example to create bank account
+ *     requestBody:
+ *        required: true
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                user_id:
+ *                  type: string
+ *                bank_name:
+ *                  type: string
+ *                bank_account_number:
+ *                  type: string
+ *                balance:
+ *                  type: string
+ *     responses:
+ *       200:
+ *         description: Successful response
+ *       400:
+ *         description: Bad request
+ *       404:
+ *         description: Not found
+ */
+router.post('/bank_accounts/admin/', Auth, AdminInsert)
 
 /**
  * @swagger
@@ -19,8 +53,6 @@ const { Auth } = require('../../middleware/middleware')
  *            schema:
  *              type: object
  *              properties:
- *                user_id:
- *                  type: string
  *                bank_name:
  *                  type: string
  *                bank_account_number:

@@ -3,7 +3,13 @@ const { PrismaClient } = require('@prisma/client')
 
 const prisma = new PrismaClient()
 
-async function Insert(req, res) {
+async function AdminInsert(req, res) {
+
+    if (req.user.role !== 'ADMIN') {
+        let resp = ResponseTemplate(null, 'you are not admin', null, 404)
+        res.status(404).json(resp)
+        return
+    }
 
     const { user_id, bank_name, bank_account_number, balance } = req.body
 
@@ -42,6 +48,12 @@ async function Insert(req, res) {
 
         const account = await prisma.bankAccounts.create({
             data: payload,
+            select: {
+                user_id: true,
+                bank_name: true,
+                bank_account_number: true,
+                balance: true
+            }
         })
 
         let resp = ResponseTemplate(account, 'success', null, 200)
@@ -52,7 +64,51 @@ async function Insert(req, res) {
         let resp = ResponseTemplate(null, 'internal server error', error, 500)
         res.json(resp)
         return
+    }
+}
 
+async function Insert(req, res) {
+
+    const { bank_name, bank_account_number, balance } = req.body
+
+    const payload = {
+        user_id: req.user.id,
+        bank_name,
+        bank_account_number: parseInt(bank_account_number),
+        balance: parseInt(balance)
+    }
+
+    try {
+
+        const checkBankNumber = await prisma.bankAccounts.findFirst({
+            where: {
+                bank_account_number: payload.bank_account_number,
+            }
+        })
+
+        if (checkBankNumber !== null) {
+            let resp = ResponseTemplate(null, 'bank account number already exist', null, 400)
+            res.json(resp)
+            return
+        }
+
+        const account = await prisma.bankAccounts.create({
+            data: payload,
+            select: {
+                bank_name: true,
+                bank_account_number: true,
+                balance: true
+            }
+        })
+
+        let resp = ResponseTemplate(account, 'success', null, 200)
+        res.json(resp)
+        return
+
+    } catch (error) {
+        let resp = ResponseTemplate(null, 'internal server error', error, 500)
+        res.json(resp)
+        return
     }
 }
 
@@ -288,6 +344,7 @@ async function Delete(req, res) {
 
 
 module.exports = {
+    AdminInsert,
     Insert,
     Get,
     GetByPK,
