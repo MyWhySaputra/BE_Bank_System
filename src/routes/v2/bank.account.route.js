@@ -11,7 +11,7 @@ const { Auth } = require('../../middleware/middleware')
  *      - bearerAuth: []
  *     tags:
  *      - "Bank Account"
- *     summary: example to create bank account
+ *     summary: example to create bank account (ADMIN ONLY)
  *     requestBody:
  *        required: true
  *        content:
@@ -77,7 +77,7 @@ router.post('/bank_accounts/', Auth, Insert)
  *      - bearerAuth: []
  *     tags:
  *      - "Bank Account"
- *     summary: Get all bank accounts
+ *     summary: Get all bank accounts (ADMIN ONLY)
  *     parameters:
  *       - in: query
  *         name: user_id
@@ -133,7 +133,7 @@ router.get('/bank_accounts/admin/', Auth, Get)
  *       404:
  *         description: Not found
  */
-router.get('/bank_accounts/:id', Auth, GetByPK)
+router.get('/bank_accounts/', Auth, GetByPK)
 
 /**
  * @swagger
