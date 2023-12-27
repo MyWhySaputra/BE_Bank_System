@@ -112,7 +112,13 @@ async function Insert(req, res) {
     }
 }
 
-async function Get(req, res) {
+async function AdminGet(req, res) {
+
+    if (req.user.role !== 'ADMIN') {
+        let resp = ResponseTemplate(null, 'you are not admin', null, 404)
+        res.status(404).json(resp)
+        return
+    }
 
     const { user_id, bank_name, bank_account_number, balance, page = 1, limit = 10 } = req.query
 
@@ -346,7 +352,7 @@ async function Delete(req, res) {
 module.exports = {
     AdminInsert,
     Insert,
-    Get,
+    AdminGet,
     GetByPK,
     Update,
     Delete

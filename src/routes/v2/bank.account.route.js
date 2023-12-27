@@ -1,6 +1,6 @@
 const express = require('express')
 const router = express.Router()
-const { AdminInsert, Insert, Get, GetByPK, Update, Delete } = require('../../controller/bank.account.controller')
+const { AdminInsert, Insert, AdminGet, GetByPK, Update, Delete } = require('../../controller/bank.account.controller')
 const { Auth } = require('../../middleware/middleware')
 
 /**
@@ -71,7 +71,7 @@ router.post('/bank_accounts/', Auth, Insert)
 
 /**
  * @swagger
- * /api/v2/bank_accounts:
+ * /api/v2/bank_accounts/admin:
  *   get:
  *     security:
  *      - bearerAuth: []
@@ -82,7 +82,7 @@ router.post('/bank_accounts/', Auth, Insert)
  *       - in: query
  *         name: user_id
  *         required: false
- *         description: The ID of bank account
+ *         description: The ID of user
  *         schema:
  *           type: string
  *       - in: query
@@ -109,7 +109,7 @@ router.post('/bank_accounts/', Auth, Insert)
  *       404:
  *         description: Not found
  */
-router.get('/bank_accounts/', Auth, Get)
+router.get('/bank_accounts/admin/', Auth, Get)
 
 /**
  * @swagger
