@@ -250,13 +250,13 @@ async function Delete(req, res) {
 
         await prisma.profile.delete({
             where: {
-                user_id: Number(id)
+                user_id: Number(req.user.id)
             },
         })
 
         await prisma.user.delete({
             where: {
-                id: Number(id)
+                id: Number(req.user.id)
             },
         })
 
