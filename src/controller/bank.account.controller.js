@@ -277,6 +277,12 @@ async function Get(req, res) {
 
 async function AdminUpdate(req, res) {
 
+    if (req.user.role !== 'ADMIN') {
+        let resp = ResponseTemplate(null, 'you are not admin', null, 404)
+        res.status(404).json(resp)
+        return
+    }
+
     const { user_id, bank_name, bank_account_number, balance } = req.body
     const { id } = req.params
 
@@ -309,14 +315,13 @@ async function AdminUpdate(req, res) {
         let resp = ResponseTemplate(null, 'internal server error', error, 500)
         res.json(resp)
         return
-
-
     }
 }
 
 async function Update(req, res) {
 
-    const { user_id, bank_name, bank_account_number, balance } = req.body
+    const { bank_name, bank_account_number, balance } = req.body
+    const user_id = req.user.id
     const { id } = req.params
 
     const payload = {}
@@ -351,7 +356,13 @@ async function Update(req, res) {
     }
 }
 
-async function Delete(req, res) {
+async function AdminDelete(req, res) {
+
+    if (req.user.role !== 'ADMIN') {
+        let resp = ResponseTemplate(null, 'you are not admin', null, 404)
+        res.status(404).json(resp)
+        return
+    }
 
     const { bank_account_number } = req.params
 
@@ -359,7 +370,7 @@ async function Delete(req, res) {
 
         const CheckBankAccount = await prisma.bankAccounts.findFirst({
             where: {
-                id: Number(id)
+                bank_account_number: Number(bank_account_number)
             }
         })
 
@@ -387,6 +398,7 @@ async function Delete(req, res) {
                     source_account_id: Number(bank_account_number)
                 },
             })
+            return
         }
 
         if (destination) {
@@ -395,6 +407,74 @@ async function Delete(req, res) {
                     destination_account_id: Number(bank_account_number)
                 },
             })
+            return
+        }
+
+        await prisma.bankAccounts.delete({
+            where: {
+                bank_account_number: Number(bank_account_number)
+            },
+        })
+
+        let resp = ResponseTemplate(null, 'success', null, 200)
+        res.json(resp)
+        return
+
+    } catch (error) {
+        let resp = ResponseTemplate(null, 'internal server error', error, 500)
+        res.json(resp)
+        return
+    }
+}
+
+async function Delete(req, res) {
+
+    const { bank_account_number } = req.params
+    const user_id = req.user.id
+
+    try {
+
+        const CheckBankAccount = await prisma.bankAccounts.findFirst({
+            where: {
+                bank_account_number: Number(bank_account_number),
+                user_id: Number(user_id)
+            }
+        })
+
+        if (CheckBankAccount === null) {
+            let resp = ResponseTemplate(null, 'data not found', null, 404)
+            res.json(resp)
+            return
+        }
+
+        const source = await prisma.transactions.findUnique({
+            where: {
+                source_account_id: Number(bank_account_number)
+            }
+        })
+
+        const destination = await prisma.transactions.findUnique({
+            where: {
+                destination_account_id: Number(bank_account_number)
+            }
+        })
+
+        if (source) {
+            await prisma.transactions.delete({
+                where: {
+                    source_account_id: Number(bank_account_number)
+                },
+            })
+            return
+        }
+
+        if (destination) {
+            await prisma.transactions.delete({
+                where: {
+                    destination_account_id: Number(bank_account_number)
+                },
+            })
+            return
         }
 
         await prisma.bankAccounts.delete({
@@ -422,5 +502,6 @@ module.exports = {
     Get,
     AdminUpdate,
     Update,
+    AdminDelete,
     Delete
 }
