@@ -157,6 +157,80 @@ async function Get(req, res) {
     }
 }
 
+async function GetUser(req, res) {
+
+    if (req.user.role !== 'ADMIN') {
+        let resp = ResponseTemplate(null, 'you are not admin', null, 404)
+        res.status(404).json(resp)
+        return
+    }
+
+    const { id, name, email, identity_number, address, page = 1, limit = 10 } = req.query
+
+    const payload = {}
+
+    if (id) payload.id = id
+    if (name) payload.name = name
+    if (email) payload.email = email
+    if (identity_number) payload.identity_number = identity_number
+    if (address) payload.address = address
+
+    try {
+        const skip = ( page - 1 ) * limit
+
+        //informasi total data keseluruhan 
+        const resultCount = await prisma.user.count() // integer jumlah total data user
+
+        //generated total page
+        const totalPage = Math.ceil( resultCount / limit)
+
+        const users = await prisma.user.findMany({
+            //take : 10,
+            take : parseInt(limit),
+            //skip : 10
+            skip:skip,
+            where: payload,
+            select: {
+                id: true,
+                name: true,
+                email: true,
+                profile: {
+                    select: {
+                        identity_type: true,
+                        identity_number: true,
+                        address: true
+                    }
+                }
+            },
+        });
+        
+        const pagination = {
+            current_page: page - 0, // ini - 0 merubah menjadi integer
+            total_page : totalPage,
+            total_data: resultCount,
+            data: users
+        }
+        const cekUser = (objectName) => {
+            return Object.keys(objectName).length === 0
+        }
+        
+        if (cekUser(users) === true) {
+            let resp = ResponseTemplate(null, 'data not found', null, 404)
+            res.json(resp)
+            return
+        }
+
+        let resp = ResponseTemplate(pagination, 'success', null, 200)
+        res.json(resp)
+        return
+
+    } catch (error) {
+        let resp = ResponseTemplate(null, 'internal server error', error, 500)
+        res.json(resp)
+        return
+    }
+}
+
 async function Update(req, res) {
 
     if (req.user.role !== 'ADMIN') {
@@ -301,6 +375,7 @@ async function Delete(req, res) {
 module.exports = {
     Register,
     Get,
+    GetUser,
     Update,
     Delete
 }
