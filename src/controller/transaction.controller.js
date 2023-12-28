@@ -5,21 +5,21 @@ const prisma = new PrismaClient()
 
 async function Insert(req, res) {
 
-    const { source_account_id, destination_account_id, amount } = req.body
+    const { source_bank_number, destination_bank_number, amount } = req.body
 
     const payload = {
-        source_account_id: parseInt(source_account_id),
-        destination_account_id: parseInt(destination_account_id),
+        source_bank_number: parseInt(source_bank_number),
+        destination_bank_number: parseInt(destination_bank_number),
         amount: parseInt(amount),
     }
 
     try {
 
         const source = await prisma.bankAccounts.findUnique({
-        where: {bank_account_number: payload.source_account_id},
+        where: {bank_account_number: payload.source_bank_number},
         });
         const destination = await prisma.bankAccounts.findUnique({
-        where: {bank_account_number: payload.destination_account_id},
+        where: {bank_account_number: payload.destination_bank_number},
         });
 
         if (!source || !destination) {
@@ -35,12 +35,12 @@ async function Insert(req, res) {
         }
 
         await prisma.bankAccounts.update({
-        where: {bank_account_number: payload.source_account_id},
+        where: {bank_account_number: payload.source_bank_number},
         data: {balance: {decrement: payload.amount}},
         })
 
         await prisma.bankAccounts.update({
-        where: {bank_account_number: payload.destination_account_id},
+        where: {bank_account_number: payload.destination_bank_number},
         data: {balance: {increment: payload.amount}},
         })
 
@@ -56,18 +56,23 @@ async function Insert(req, res) {
         let resp = ResponseTemplate(null, 'internal server error', error, 500)
         res.json(resp)
         return
-
     }
 }
 
-async function Get(req, res) {
+async function AdminGet(req, res) {
 
-    const { source_account_id, destination_account_id, amount, page = 1, limit = 10  } = req.query
+    if (req.user.role !== 'ADMIN') {
+        let resp = ResponseTemplate(null, 'you are not admin', null, 404)
+        res.status(404).json(resp)
+        return
+    }
+
+    const { source_bank_number, destination_bank_number, amount, page = 1, limit = 10  } = req.query
 
     const payload = {}
 
-    if (source_account_id) payload.source_account_id = source_account_id
-    if (destination_account_id) payload.destination_account_id = destination_account_id
+    if (source_bank_number) payload.source_bank_number = source_bank_number
+    if (destination_bank_number) payload.destination_bank_number = destination_bank_number
     if (amount) payload.amount = amount
 
     try {
@@ -88,7 +93,7 @@ async function Get(req, res) {
             where: payload,
             select: {
                 id: true,
-                source_account_id: true,
+                source_bank_number: true,
                 bank_account_source: {
                     select: {
                         bank_name: true,
@@ -100,7 +105,7 @@ async function Get(req, res) {
                         }
                     }
                 },
-                destination_account_id: true,
+                destination_bank_number: true,
                 bank_account_destination: {
                     select: {
                         bank_name: true,
@@ -141,22 +146,61 @@ async function Get(req, res) {
         let resp = ResponseTemplate(null, 'internal server error', error, 500)
         res.json(resp)
         return
-
-
     }
 }
 
-async function GetByPK(req, res) {
+async function Get(req, res) {
 
-    const { id } = req.params
+    const { source_bank_number, destination_bank_number, page = 1, limit = 10 } = req.query
+    
+    const user_id = req.user.id
+
+    const payload = {}
+
+    if (source_bank_number) payload.source_bank_number = source_bank_number
+    if (destination_bank_number) payload.destination_bank_number = destination_bank_number
+    if (amount) payload.amount = amount
 
     try {
-        const transaction = await prisma.transactions.findUnique({
+        const user = await prisma.bankAccounts.findMany({
             where: {
-                id: Number(id)
-            },
+                user_id: user_id
+            }
+        })
+
+        if (source_bank_number) {
+            if (user.bank_account_number !== source_bank_number) {
+                let resp = ResponseTemplate(null, 'Source account not found', null, 404)
+                res.json(resp)
+                return
+            }
+        }
+
+        if (destination_bank_number) {
+            if (user.bank_account_number !== destination_bank_number) {
+                let resp = ResponseTemplate(null, 'destination account not found', null, 404)
+                res.json(resp)
+                return
+            }
+        }
+
+        let skip = ( page - 1 ) * limit
+
+        //informasi total data keseluruhan 
+        const resultCount = await prisma.transactions.count() // integer jumlah total data user
+
+        //generated total page
+        const totalPage = Math.ceil( resultCount / limit)
+
+        const transaction = await prisma.transactions.findMany({
+            //take : 10,
+            take : parseInt(limit),
+            //skip : 10
+            skip:skip,
+            where: payload,
             select: {
-                source_account_id: true,
+                id: true,
+                source_bank_number: true,
                 bank_account_source: {
                     select: {
                         bank_name: true,
@@ -168,7 +212,7 @@ async function GetByPK(req, res) {
                         }
                     }
                 },
-                destination_account_id: true,
+                destination_bank_number: true,
                 bank_account_destination: {
                     select: {
                         bank_name: true,
@@ -182,13 +226,66 @@ async function GetByPK(req, res) {
                 },
                 amount: true,
             }
-        })
+        });
 
-        if (transaction === null) {
+        const pagination = {
+            current_page: page - 0, // ini - 0 merubah menjadi integer
+            total_page : totalPage,
+            total_data: resultCount,
+            data: transaction
+        }
+
+        const cekTransaction = (objectName) => {
+            return Object.keys(objectName).length === 0
+        }
+
+        if (cekTransaction(transaction) === true) {
             let resp = ResponseTemplate(null, 'data not found', null, 404)
             res.json(resp)
             return
         }
+
+        let resp = ResponseTemplate(pagination, 'success', null, 200)
+        res.json(resp)
+        return
+
+    } catch (error) {
+        let resp = ResponseTemplate(null, 'internal server error', error, 500)
+        res.json(resp)
+        return
+    }
+}
+
+async function AdminUpdate(req, res) {
+
+    if (req.user.role !== 'ADMIN') {
+        let resp = ResponseTemplate(null, 'you are not admin', null, 404)
+        res.status(404).json(resp)
+        return
+    }
+
+    const { source_bank_number, destination_bank_number, amount } = req.body
+    const { id } = req.params
+
+    const payload = {}
+
+    if (!source_bank_number && !destination_bank_number && !amount) {
+        let resp = ResponseTemplate(null, 'bad request', null, 400)
+        res.json(resp)
+        return
+    }
+
+    if (source_bank_number) payload.source_bank_number = source_bank_number
+    if (destination_bank_number) payload.destination_bank_number = destination_bank_number
+    if (amount) payload.amount = amount
+
+    try {
+        const transaction = await prisma.transactions.update({
+            where: {
+                id: Number(id)
+            },
+            data: payload
+        })
 
         let resp = ResponseTemplate(transaction, 'success', null, 200)
         res.json(resp)
@@ -201,9 +298,9 @@ async function GetByPK(req, res) {
     }
 }
 
-
 module.exports = {
     Insert,
+    AdminGet,
     Get,
-    GetByPK
+    AdminUpdate,
 }

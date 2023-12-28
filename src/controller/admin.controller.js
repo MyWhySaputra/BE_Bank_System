@@ -9,7 +9,7 @@ var jwt = require('jsonwebtoken')
 async function Register(req, res) {
 
     if (req.user.role !== 'SUPER') {
-        let resp = ResponseTemplate(null, 'you are not admin', null, 404)
+        let resp = ResponseTemplate(null, 'you are not super admin', null, 404)
         res.status(404).json(resp)
         return
     }

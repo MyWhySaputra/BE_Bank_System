@@ -1,6 +1,6 @@
 const express = require('express')
 const router = express.Router()
-const { AdminInsert, Insert, AdminGet, GetByPK, Update, Delete } = require('../../controller/bank.account.controller')
+const { AdminInsert, Insert, AdminGet, Get, AdminUpdate, Update, AdminDelete, Delete} = require('../../controller/bank.account.controller')
 const { Auth } = require('../../middleware/middleware')
 
 /**
@@ -36,38 +36,6 @@ const { Auth } = require('../../middleware/middleware')
  *         description: Not found
  */
 router.post('/bank_accounts/admin/', Auth, AdminInsert)
-
-/**
- * @swagger
- * /api/v2/bank_accounts:
- *   post:
- *     security:
- *      - bearerAuth: []
- *     tags:
- *      - "Bank Account"
- *     summary: example to create bank account
- *     requestBody:
- *        required: true
- *        content:
- *          application/json:
- *            schema:
- *              type: object
- *              properties:
- *                bank_name:
- *                  type: string
- *                bank_account_number:
- *                  type: string
- *                balance:
- *                  type: string
- *     responses:
- *       200:
- *         description: Successful response
- *       400:
- *         description: Bad request
- *       404:
- *         description: Not found
- */
-router.post('/bank_accounts/', Auth, Insert)
 
 /**
  * @swagger
@@ -109,31 +77,138 @@ router.post('/bank_accounts/', Auth, Insert)
  *       404:
  *         description: Not found
  */
-router.get('/bank_accounts/admin/', Auth, Get)
+router.get('/bank_accounts/admin/', Auth, AdminGet)
 
 /**
  * @swagger
- * /api/v2/bank_accounts/{id}:
- *   get:
+ * /api/v2/bank_accounts/admin/{id}:
+ *   put:
  *     security:
  *      - bearerAuth: []
  *     tags:
  *      - "Bank Account"
- *     summary: Get one bank account
+ *     summary: Update bank account (ADMIN ONLY)
  *     parameters:
  *       - in: path
  *         name: id
  *         required: true
  *         description: The ID of the user
  *         schema:
- *           type: integer
+ *           type: string
+ *     requestBody:
+ *        required: true
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                user_id:
+ *                  type: string
+ *                bank_name:
+ *                  type: string
+ *                bank_account_number:
+ *                  type: string
+ *                balance:
+ *                  type: string
+ *     responses:
+ *       200:
+ *         description: Successful response
+ *       400:
+ *         description: Bad request
+ */
+router.put('/bank_accounts/admin/:id', Auth, AdminUpdate)
+
+/**
+ * @swagger
+ * /api/v2/bank_accounts/admin/{bank_account_number}:
+ *   delete:
+ *     security:
+ *      - bearerAuth: []
+ *     tags:
+ *      - "Bank Account"
+ *     summary: Delete one bank account (ADMIN ONLY)
+ *     parameters:
+ *       - in: path
+ *         name: bank_account_number
+ *         required: true
+ *         description: The bank_account_number of the bank account
+ *         schema:
+ *           type: string
  *     responses:
  *       200:
  *         description: Successful response
  *       404:
  *         description: Not found
  */
-router.get('/bank_accounts/', Auth, GetByPK)
+router.delete('/bank_accounts/admin/:bank_account_number', Auth, AdminDelete)
+
+/**
+ * @swagger
+ * /api/v2/bank_accounts:
+ *   post:
+ *     security:
+ *      - bearerAuth: []
+ *     tags:
+ *      - "Bank Account"
+ *     summary: example to create bank account
+ *     requestBody:
+ *        required: true
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                bank_name:
+ *                  type: string
+ *                bank_account_number:
+ *                  type: string
+ *                balance:
+ *                  type: string
+ *     responses:
+ *       200:
+ *         description: Successful response
+ *       400:
+ *         description: Bad request
+ *       404:
+ *         description: Not found
+ */
+router.post('/bank_accounts/', Auth, Insert)
+
+/**
+ * @swagger
+ * /api/v2/bank_accounts:
+ *   get:
+ *     security:
+ *      - bearerAuth: []
+ *     tags:
+ *      - "Bank Account"
+ *     summary: Get all bank accounts
+ *     parameters:
+ *       - in: query
+ *         name: bank_name
+ *         required: false
+ *         description: The name of bank account
+ *         schema:
+ *           type: string
+ *       - in: query
+ *         name: bank_account_number
+ *         required: false
+ *         description: The bank_account_number of bank account
+ *         schema:
+ *           type: string
+ *       - in: query
+ *         name: balance
+ *         required: false
+ *         description: The balance of bank account
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Successful response
+ *       404:
+ *         description: Not found
+ */
+router.get('/bank_accounts/', Auth, Get)
 
 /**
  * @swagger
@@ -143,14 +218,27 @@ router.get('/bank_accounts/', Auth, GetByPK)
  *      - bearerAuth: []
  *     tags:
  *      - "Bank Account"
- *     summary: Get one bank account
+ *     summary: Update bank account
  *     parameters:
  *       - in: path
  *         name: id
  *         required: true
  *         description: The ID of the user
  *         schema:
- *           type: integer
+ *           type: string
+ *     requestBody:
+ *        required: true
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                bank_name:
+ *                  type: string
+ *                bank_account_number:
+ *                  type: string
+ *                balance:
+ *                  type: string
  *     responses:
  *       200:
  *         description: Successful response

@@ -65,42 +65,6 @@ router.get('/admin/', Auth, Get)
 
 /**
  * @swagger
- * /api/v2/admin/get-user:
- *   get:
- *     security:
- *      - bearerAuth: []
- *     tags:
- *      - "Admin"
- *     summary: Get user
- *     requestBody:
- *        required: false
- *        content:
- *          application/json:
- *            schema:
- *              type: object
- *              properties:
- *                id:
- *                  type: string
- *                name:
- *                  type: string
- *                email:
- *                  type: string
- *                identity_type:
- *                  type: string
- *                identity_number:
- *                  type: string
- *                address:
- *                  type: string
- *     responses:
- *       200:
- *         description: Successful response
- *       404:
- *         description: Not found
- */
-router.get('/admin/get-user/', Auth, GetUser)
-
-/**
- * @swagger
  * /api/v2/admin:
  *   put:
  *     security:
@@ -140,13 +104,73 @@ router.put('/admin/', Auth, multer.single("profile_picture"), Update)
 
 /**
  * @swagger
+ * /api/v2/admin/{email}:
+ *   delete:
+ *     security:
+ *      - bearerAuth: []
+ *     tags:
+ *      - "Admin"
+ *     summary: Delete admin
+ *     parameters:
+ *       - in: path
+ *         name: email
+ *         required: true
+ *         description: The email of user
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Successful response
+ *       404:
+ *         description: Not found
+ */
+router.delete('/admin/:email', Auth, Delete)
+
+/**
+ * @swagger
+ * /api/v2/admin/get-user:
+ *   get:
+ *     security:
+ *      - bearerAuth: []
+ *     tags:
+ *      - "Admin"
+ *     summary: Get all user
+ *     requestBody:
+ *        required: false
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                id:
+ *                  type: string
+ *                name:
+ *                  type: string
+ *                email:
+ *                  type: string
+ *                identity_type:
+ *                  type: string
+ *                identity_number:
+ *                  type: string
+ *                address:
+ *                  type: string
+ *     responses:
+ *       200:
+ *         description: Successful response
+ *       404:
+ *         description: Not found
+ */
+router.get('/admin/get-user/', Auth, GetUser)
+
+/**
+ * @swagger
  * /api/v2/admin/update-user:
  *   put:
  *     security:
  *      - bearerAuth: []
  *     tags:
  *      - "Admin"
- *     summary: Update admin
+ *     summary: Update user
  *     requestBody:
  *        required: true
  *        content:
@@ -178,30 +202,6 @@ router.put('/admin/', Auth, multer.single("profile_picture"), Update)
  *         description: Bad request
  */
 router.put('/admin/update-user/', Auth, multer.single("profile_picture"), UpdateUser)
-
-/**
- * @swagger
- * /api/v2/admin/{email}:
- *   delete:
- *     security:
- *      - bearerAuth: []
- *     tags:
- *      - "Admin"
- *     summary: Delete admin
- *     parameters:
- *       - in: path
- *         name: email
- *         required: true
- *         description: The email of user
- *         schema:
- *           type: string
- *     responses:
- *       200:
- *         description: Successful response
- *       404:
- *         description: Not found
- */
-router.delete('/admin/:email', Auth, Delete)
 
 /**
  * @swagger

@@ -1,6 +1,6 @@
 const express = require('express')
 const router = express.Router()
-const { Insert, Get, GetByPK } = require('../../controller/transaction.controller')
+const { Insert, Get, AdminGet, AdminUpdate } = require('../../controller/transaction.controller')
 const { Auth } = require('../../middleware/middleware')
 
 /**
@@ -39,16 +39,44 @@ router.post('/transactions/', Auth, Insert)
  *      - bearerAuth: []
  *     tags:
  *      - "Transaction"
- *     summary: Get all transactions
+ *     summary: Get all your transactions
  *     parameters:
  *       - in: query
- *         name: source_account_id
+ *         name: source_bank_number
  *         required: false
  *         description: The ID of source_account
  *         schema:
  *           type: string
  *       - in: query
- *         name: destination_account_id
+ *         name: destination_bank_number
+ *         required: false
+ *         description: The ID of destination_account
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Successful response
+ */
+router.get('/transactions/', Auth, Get)
+
+/**
+ * @swagger
+ * /api/v2/transactions/admin:
+ *   get:
+ *     security:
+ *      - bearerAuth: []
+ *     tags:
+ *      - "Transaction"
+ *     summary: Get all transactions (ADMIN ONLY)
+ *     parameters:
+ *       - in: query
+ *         name: source_bank_number
+ *         required: false
+ *         description: The ID of source_account
+ *         schema:
+ *           type: string
+ *       - in: query
+ *         name: destination_bank_number
  *         required: false
  *         description: The ID of destination_account
  *         schema:
@@ -63,28 +91,41 @@ router.post('/transactions/', Auth, Insert)
  *       200:
  *         description: Successful response
  */
-router.get('/transactions/', Auth, Get)
+router.get('/transactions/admin/', Auth, AdminGet)
 
 /**
  * @swagger
- * /api/v2/transactions/{id}:
- *   get:
+ * /api/v2/transactions/admin:
+ *   put:
  *     security:
  *      - bearerAuth: []
  *     tags:
  *      - "Transaction"
- *     summary: Get one transaction
+ *     summary: update transactions (ADMIN ONLY)
  *     parameters:
  *       - in: path
  *         name: id
  *         required: true
- *         description: The ID of the transaction
+ *         description: The ID of transaction
  *         schema:
- *           type: integer
+ *           type: string
+ *     requestBody:
+ *        required: true
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                source_bank_number:
+ *                  type: string
+ *                destination_bank_number:
+ *                  type: string
+ *                amount:
+ *                  type: string
  *     responses:
  *       200:
  *         description: Successful response
  */
-router.get('/transactions/:id', Auth, GetByPK)
+router.put('/transactions/admin/:id', Auth, AdminUpdate)
 
 module.exports = router
