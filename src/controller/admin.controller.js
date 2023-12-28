@@ -160,13 +160,14 @@ async function GetUser(req, res) {
         return
     }
 
-    const { id, name, email, identity_number, address, page = 1, limit = 10 } = req.query
+    const { id, name, email, identity_type, identity_number, address, page = 1, limit = 10 } = req.query
 
     const payload = {}
 
     if (id) payload.id = Number(id)
     if (name) payload.name = name
     if (email) payload.email = email
+    if (identity_type) payload.identity_type = identity_type
     if (identity_number) payload.identity_number = identity_number
     if (address) payload.address = address
 
@@ -524,5 +525,7 @@ module.exports = {
     Get,
     GetUser,
     Update,
-    Delete
+    UpdateUser,
+    Delete,
+    DeleteUser
 }
