@@ -24,13 +24,13 @@ async function Insert(req, res) {
 
         if (!source || !destination) {
             let resp = ResponseTemplate(null, 'Source or destination account not found', null, 404)
-            res.json(resp)
+            res.status(404).json(resp)
             return
         }
 
         if (source.balance < payload.amount) {
             let resp = ResponseTemplate(null, 'your balance is not enough', null, 400)
-            res.json(resp)
+            res.status(400).json(resp)
             return
         }
 
@@ -49,12 +49,12 @@ async function Insert(req, res) {
         })
 
         let resp = ResponseTemplate(transaction, 'success', null, 200)
-        res.json(resp)
+        res.status(200).json(resp)
         return
 
     } catch (error) {
         let resp = ResponseTemplate(null, 'internal server error', error, 500)
-        res.json(resp)
+        res.status(500).json(resp)
         return
     }
 }
@@ -134,17 +134,17 @@ async function AdminGet(req, res) {
 
         if (cekTransaction(transaction) === true) {
             let resp = ResponseTemplate(null, 'data not found', null, 404)
-            res.json(resp)
+            res.status(404).json(resp)
             return
         }
 
         let resp = ResponseTemplate(pagination, 'success', null, 200)
-        res.json(resp)
+        res.status(200).json(resp)
         return
 
     } catch (error) {
         let resp = ResponseTemplate(null, 'internal server error', error, 500)
-        res.json(resp)
+        res.status(500).json(resp)
         return
     }
 }
@@ -171,7 +171,7 @@ async function Get(req, res) {
         if (source_bank_number) {
             if (user.bank_account_number !== source_bank_number) {
                 let resp = ResponseTemplate(null, 'Source account not found', null, 404)
-                res.json(resp)
+                res.status(404).json(resp)
                 return
             }
         }
@@ -179,7 +179,7 @@ async function Get(req, res) {
         if (destination_bank_number) {
             if (user.bank_account_number !== destination_bank_number) {
                 let resp = ResponseTemplate(null, 'destination account not found', null, 404)
-                res.json(resp)
+                res.status(404).json(resp)
                 return
             }
         }
@@ -241,17 +241,17 @@ async function Get(req, res) {
 
         if (cekTransaction(transaction) === true) {
             let resp = ResponseTemplate(null, 'data not found', null, 404)
-            res.json(resp)
+            res.status(404).json(resp)
             return
         }
 
         let resp = ResponseTemplate(pagination, 'success', null, 200)
-        res.json(resp)
+        res.status(200).json(resp)
         return
 
     } catch (error) {
         let resp = ResponseTemplate(null, 'internal server error', error, 500)
-        res.json(resp)
+        res.status(500).json(resp)
         return
     }
 }
@@ -271,7 +271,7 @@ async function AdminUpdate(req, res) {
 
     if (!source_bank_number && !destination_bank_number && !amount) {
         let resp = ResponseTemplate(null, 'bad request', null, 400)
-        res.json(resp)
+        res.status(400).json(resp)
         return
     }
 
@@ -288,12 +288,12 @@ async function AdminUpdate(req, res) {
         })
 
         let resp = ResponseTemplate(transaction, 'success', null, 200)
-        res.json(resp)
+        res.status(200).json(resp)
         return
 
     } catch (error) {
         let resp = ResponseTemplate(null, 'internal server error', error, 500)
-        res.json(resp)
+        res.status(500).json(resp)
         return
     }
 }

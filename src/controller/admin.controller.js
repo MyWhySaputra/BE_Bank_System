@@ -212,17 +212,17 @@ async function GetUser(req, res) {
         
         if (cekUser(users) === true) {
             let resp = ResponseTemplate(null, 'data not found', null, 404)
-            res.json(resp)
+            res.status(404).json(resp)
             return
         }
 
         let resp = ResponseTemplate(pagination, 'success', null, 200)
-        res.json(resp)
+        res.status(200).json(resp)
         return
 
     } catch (error) {
         let resp = ResponseTemplate(null, 'internal server error', error, 500)
-        res.json(resp)
+        res.status(500).json(resp)
         return
     }
 }

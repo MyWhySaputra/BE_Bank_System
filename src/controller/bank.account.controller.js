@@ -30,7 +30,7 @@ async function AdminInsert(req, res) {
 
         if (checkAccount === null) {
             let resp = ResponseTemplate(null, 'user not found', null, 404)
-            res.json(resp)
+            res.status(404).json(resp)
             return
         }
 
@@ -42,7 +42,7 @@ async function AdminInsert(req, res) {
 
         if (checkBankNumber !== null) {
             let resp = ResponseTemplate(null, 'bank account number already exist', null, 400)
-            res.json(resp)
+            res.status(400).json(resp)
             return
         }
 
@@ -57,12 +57,12 @@ async function AdminInsert(req, res) {
         })
 
         let resp = ResponseTemplate(account, 'success', null, 200)
-        res.json(resp)
+        res.status(200).json(resp)
         return
 
     } catch (error) {
         let resp = ResponseTemplate(null, 'internal server error', error, 500)
-        res.json(resp)
+        res.status(500).json(resp)
         return
     }
 }
@@ -88,7 +88,7 @@ async function Insert(req, res) {
 
         if (checkBankNumber !== null) {
             let resp = ResponseTemplate(null, 'bank account number already exist', null, 400)
-            res.json(resp)
+            res.status(400).json(resp)
             return
         }
 
@@ -102,12 +102,12 @@ async function Insert(req, res) {
         })
 
         let resp = ResponseTemplate(account, 'success', null, 200)
-        res.json(resp)
+        res.status(200).json(resp)
         return
 
     } catch (error) {
         let resp = ResponseTemplate(null, 'internal server error', error, 500)
-        res.json(resp)
+        res.status(500).json(resp)
         return
     }
 }
@@ -180,20 +180,18 @@ async function AdminGet(req, res) {
 
         if (cekBankAccount(bankAccount) === true) {
             let resp = ResponseTemplate(null, 'data not found', null, 404)
-            res.json(resp)
+            res.status(404).json(resp)
             return
         }
 
         let resp = ResponseTemplate(pagination, 'success', null, 200)
-        res.json(resp)
+        res.status(200).json(resp)
         return
 
     } catch (error) {
         let resp = ResponseTemplate(null, 'internal server error', error, 500)
-        res.json(resp)
+        res.status(500).json(resp)
         return
-
-
     }
 }
 
@@ -260,17 +258,17 @@ async function Get(req, res) {
 
         if (cekBankAccount(bankAccount) === true) {
             let resp = ResponseTemplate(null, 'data not found', null, 404)
-            res.json(resp)
+            res.status(404).json(resp)
             return
         }
 
         let resp = ResponseTemplate(pagination, 'success', null, 200)
-        res.json(resp)
+        res.status(200).json(resp)
         return
 
     } catch (error) {
         let resp = ResponseTemplate(null, 'internal server error', error, 500)
-        res.json(resp)
+        res.status(500).json(resp)
         return
     }
 }
@@ -290,7 +288,7 @@ async function AdminUpdate(req, res) {
 
     if (!user_id && !bank_name && !bank_account_number && !balance) {
         let resp = ResponseTemplate(null, 'bad request', null, 400)
-        res.json(resp)
+        res.status(400).json(resp)
         return
     }
 
@@ -308,12 +306,12 @@ async function AdminUpdate(req, res) {
         })
 
         let resp = ResponseTemplate(account, 'success', null, 200)
-        res.json(resp)
+        res.status(200).json(resp)
         return
 
     } catch (error) {
         let resp = ResponseTemplate(null, 'internal server error', error, 500)
-        res.json(resp)
+        res.status(500).json(resp)
         return
     }
 }
@@ -346,12 +344,12 @@ async function Update(req, res) {
         })
 
         let resp = ResponseTemplate(account, 'success', null, 200)
-        res.json(resp)
+        res.status(200).json(resp)
         return
 
     } catch (error) {
         let resp = ResponseTemplate(null, 'internal server error', error, 500)
-        res.json(resp)
+        res.status(500).json(resp)
         return
     }
 }
@@ -376,7 +374,7 @@ async function AdminDelete(req, res) {
 
         if (CheckBankAccount === null) {
             let resp = ResponseTemplate(null, 'data not found', null, 404)
-            res.json(resp)
+            res.status(404).json(resp)
             return
         }
 
@@ -417,12 +415,12 @@ async function AdminDelete(req, res) {
         })
 
         let resp = ResponseTemplate(null, 'success', null, 200)
-        res.json(resp)
+        res.status(200).json(resp)
         return
 
     } catch (error) {
         let resp = ResponseTemplate(null, 'internal server error', error, 500)
-        res.json(resp)
+        res.status(500).json(resp)
         return
     }
 }
@@ -443,7 +441,7 @@ async function Delete(req, res) {
 
         if (CheckBankAccount === null) {
             let resp = ResponseTemplate(null, 'data not found', null, 404)
-            res.json(resp)
+            res.status(404).json(resp)
             return
         }
 
@@ -484,12 +482,12 @@ async function Delete(req, res) {
         })
 
         let resp = ResponseTemplate(null, 'success', null, 200)
-        res.json(resp)
+        res.status(200).json(resp)
         return
 
     } catch (error) {
         let resp = ResponseTemplate(null, 'internal server error', error, 500)
-        res.json(resp)
+        res.status(500).json(resp)
         return
     }
 }
