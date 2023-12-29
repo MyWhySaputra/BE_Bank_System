@@ -8,12 +8,6 @@ var jwt = require('jsonwebtoken')
 
 async function Register(req, res) {
 
-    if (req.user.role !== 'SUPER') {
-        let resp = ResponseTemplate(null, 'you are not super admin', null, 404)
-        res.status(404).json(resp)
-        return
-    }
-
     const { name, email, password, identity_type, identity_number, address } = req.body
 
     const hashPass = await HashPassword(password)

@@ -9,11 +9,9 @@ const multer = require("multer")()
  * @swagger
  * /api/v2/admin:
  *   post:
- *     security:
- *      - bearerAuth: []
  *     tags:
  *      - "Admin"
- *     summary: example to register admin (SUPER ADMIN ONLY)
+ *     summary: example to register admin
  *     requestBody:
  *        required: true
  *        content:
