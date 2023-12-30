@@ -62,8 +62,28 @@ async function Auth(req, res, next) {
     }
 }
 
+async function Admin(req, res, next) {
+
+    try {
+
+        if (req.user.role !== 'ADMIN') {
+            let resp = ResponseTemplate(null, 'you are not admin', null, 404)
+            res.status(404).json(resp)
+            return
+        }
+
+        next()
+
+    } catch (error) {
+        let resp = ResponseTemplate(null, 'internal server error', error, 500)
+        res.status(500).json(resp)
+        return
+    }
+}
+
 module.exports = {
     Auth,
+    Admin,
     CheckLogin,
     CheckRegister
 }
