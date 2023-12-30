@@ -3,40 +3,6 @@ const { ResponseTemplate } = require('../helper/template.helper')
 const Joi = require('joi')
 const jwt = require('jsonwebtoken')
 
-function CheckRegister(req, res, next) {
-    const schema = Joi.object({
-        name: Joi.string().max(255).required(),
-        email: Joi.string().email().required(),
-        password: Joi.string().alphanum().min(6).required()
-    })
-
-    const { error } = schema.validate(req.body)
-    if (error) {
-        let respErr = ResponseTemplate(null, 'invalid request',
-            error.details[0].message, 400)
-        res.status(400).json(respErr)
-        return
-    }
-    next()
-}
-
-function CheckLogin(req, res, next) {
-    const schema = Joi.object({
-        email: Joi.string().email().required(),
-        password: Joi.string().alphanum().min(6).required()
-    })
-
-    const { error } = schema.validate(req.body)
-    if (error) {
-        let respErr = ResponseTemplate(null, 'invalid request',
-            error.details[0].message, 400)
-        res.status(400).json(respErr)
-        return
-    }
-
-    next()
-}
-
 async function Auth(req, res, next) {
 
     const { authorization } = req.headers
@@ -81,9 +47,63 @@ async function Admin(req, res, next) {
     }
 }
 
+function CheckLogin(req, res, next) {
+    const schema = Joi.object({
+        email: Joi.string().email().required(),
+        password: Joi.string().min(6).required()
+    })
+
+    const { error } = schema.validate(req.body)
+
+    if (error) {
+        let resp = ResponseTemplate(null, 'invalid request', error.details[0].message, 400)
+        res.status(400).json(resp)
+        return
+    }
+
+    next()
+}
+
+function ChackForget(req, res, next) {
+    const schema = Joi.object({
+        email: Joi.string().email().required()
+    })
+
+    const { error } = schema.validate(req.body)
+
+    if (error) {
+        let resp = ResponseTemplate(null, 'invalid request', error.details[0].message, 400)
+        res.status(400).json(resp)
+        return
+    }
+
+    next()
+}
+
+function CheckRegister(req, res, next) {
+    const schema = Joi.object({
+        name: Joi.string().max(255).required(),
+        email: Joi.string().email().required(),
+        password: Joi.string().min(6).required(),
+        identity_type: Joi.string().required(),
+        identity_number: Joi.string().min(14).required(),
+        address: Joi.string().required()
+    })
+
+    const { error } = schema.validate(req.body)
+    if (error) {
+        let resp = ResponseTemplate(null, 'invalid request', error.details[0].message, 400)
+        res.status(400).json(resp)
+        return
+    }
+    next()
+}
+
+
 module.exports = {
     Auth,
     Admin,
     CheckLogin,
+    ChackForget,
     CheckRegister
 }

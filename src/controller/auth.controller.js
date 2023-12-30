@@ -99,7 +99,7 @@ async function forgetPassword(req, res) {
         })
 
         if (checkUser === null) {
-            let resp = ResponseTemplate(null, 'email is not found or incorrect', null, 400)
+            let resp = ResponseTemplate(null, 'email not found', null, 400)
             res.status(400).json(resp)
             return
         }

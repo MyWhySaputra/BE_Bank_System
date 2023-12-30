@@ -1,7 +1,7 @@
 const express = require('express')
 const router = express.Router()
 const { Register, Get, Update, Delete } = require('../../controller/user.controller')
-const { Auth } = require('../../middleware/middleware')
+const { Auth, CheckRegister } = require('../../middleware/middleware')
 
 const multer = require("multer")()
 
@@ -42,7 +42,7 @@ const multer = require("multer")()
  *       500:
  *         description: Internal server error
  */
-router.post('/users/', multer.single("profile_picture"), Register)
+router.post('/users/', multer.single("profile_picture"), CheckRegister, Register)
 
 /**
  * @swagger
