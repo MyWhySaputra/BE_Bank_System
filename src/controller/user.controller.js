@@ -81,7 +81,9 @@ async function Register(req, res) {
                         profile_picture: true,
                         identity_type: true,
                         identity_number: true,
-                        address: true
+                        address: true,
+                        created_at: true,
+                        updated_at: true
                     }
                 }
             },
@@ -116,7 +118,9 @@ async function Get(req, res) {
                         profile_picture: true,
                         identity_type: true,
                         identity_number: true,
-                        address: true
+                        address: true,
+                        created_at: true,
+                        updated_at: true
                     }
                 }
             }
@@ -195,7 +199,9 @@ async function Update(req, res) {
                         profile_picture: true,
                         identity_type: true,
                         identity_number: true,
-                        address: true
+                        address: true,
+                        created_at: true,
+                        updated_at: true
                     }
                 }
             }

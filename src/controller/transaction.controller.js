@@ -45,7 +45,37 @@ async function Insert(req, res) {
         })
 
         const transaction = await prisma.transactions.create({
-            data: payload
+            data: payload,
+            select: {
+                id: true,
+                source_bank_number: true,
+                bank_account_source: {
+                    select: {
+                        bank_name: true,
+                        bank_account_number: true,
+                        user: {
+                            select: {
+                                name: true,
+                            }
+                        }
+                    }
+                },
+                destination_bank_number: true,
+                bank_account_destination: {
+                    select: {
+                        bank_name: true,
+                        bank_account_number: true,
+                        user: {
+                            select: {
+                                name: true,
+                            }
+                        }
+                    }
+                },
+                amount: true,
+                created_at: true,
+                updated_at: true
+            }
         })
 
         let resp = ResponseTemplate(transaction, 'success', null, 200)
@@ -135,6 +165,8 @@ async function Get(req, res) {
                     }
                 },
                 amount: true,
+                created_at: true,
+                updated_at: true
             }
         });
 
@@ -219,6 +251,8 @@ async function AdminGet(req, res) {
                     }
                 },
                 amount: true,
+                created_at: true,
+                updated_at: true
             }
         });
 
@@ -272,7 +306,15 @@ async function AdminUpdate(req, res) {
             where: {
                 id: Number(id)
             },
-            data: payload
+            data: payload,
+            select: {
+                id: true,
+                source_bank_number: true,
+                destination_bank_number: true,
+                amount: true,
+                created_at: true,
+                updated_at: true
+            }
         })
 
         let resp = ResponseTemplate(transaction, 'success', null, 200)

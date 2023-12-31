@@ -82,7 +82,9 @@ async function Register(req, res) {
                         profile_picture: true,
                         identity_type: true,
                         identity_number: true,
-                        address: true
+                        address: true,
+                        created_at: true,
+                        updated_at: true
                     }
                 }
             },
@@ -117,7 +119,9 @@ async function Get(req, res) {
                         profile_picture: true,
                         identity_type: true,
                         identity_number: true,
-                        address: true
+                        address: true,
+                        created_at: true,
+                        updated_at: true
                     }
                 }
             }
@@ -130,75 +134,6 @@ async function Get(req, res) {
         }
 
         let resp = ResponseTemplate(users, 'success', null, 200)
-        res.status(200).json(resp)
-        return
-
-    } catch (error) {
-        let resp = ResponseTemplate(null, 'internal server error', error, 500)
-        res.status(500).json(resp)
-        return
-    }
-}
-
-async function GetUser(req, res) {
-
-    const { id, name, email, identity_type, identity_number, address, page = 1, limit = 10 } = req.query
-
-    const payload = {}
-
-    if (id) payload.id = Number(id)
-    if (name) payload.name = name
-    if (email) payload.email = email
-    if (identity_type) payload.identity_type = identity_type
-    if (identity_number) payload.identity_number = identity_number
-    if (address) payload.address = address
-
-    try {
-        const skip = ( page - 1 ) * limit
-
-        //informasi total data keseluruhan 
-        const resultCount = await prisma.user.count() // integer jumlah total data user
-
-        //generated total page
-        const totalPage = Math.ceil( resultCount / limit)
-
-        const users = await prisma.user.findMany({
-            //take : 10,
-            take : parseInt(limit),
-            //skip : 10
-            skip:skip,
-            where: payload,
-            select: {
-                id: true,
-                name: true,
-                email: true,
-                profile: {
-                    select: {
-                        identity_type: true,
-                        identity_number: true,
-                        address: true
-                    }
-                }
-            },
-        });
-        
-        const pagination = {
-            current_page: page - 0, // ini - 0 merubah menjadi integer
-            total_page : totalPage,
-            total_data: resultCount,
-            data: users
-        }
-        const cekUser = (objectName) => {
-            return Object.keys(objectName).length === 0
-        }
-        
-        if (cekUser(users) === true) {
-            let resp = ResponseTemplate(null, 'data not found', null, 404)
-            res.status(404).json(resp)
-            return
-        }
-
-        let resp = ResponseTemplate(pagination, 'success', null, 200)
         res.status(200).json(resp)
         return
 
@@ -265,79 +200,9 @@ async function Update(req, res) {
                         profile_picture: true,
                         identity_type: true,
                         identity_number: true,
-                        address: true
-                    }
-                }
-            }
-        })
-
-        let resp = ResponseTemplate(users, 'success', null, 200)
-        res.status(200).json(resp)
-        return
-
-    } catch (error) {
-        let resp = ResponseTemplate(null, 'internal server error', error, 500)
-        res.status(500).json(resp)
-        return
-    }
-}
-
-async function UpdateUser(req, res) {
-
-    const { id, name, email, password, identity_type, identity_number, address } = req.body
-
-    const payload = {}
-    const data = {}
-    const where = { user_id: Number(id) }
-    const update = {where,data}
-    const profile = {update}
-
-    if (!name && !email && !password && !req.file && !identity_type && !identity_number && !address) {
-        let resp = ResponseTemplate(null, 'bad request', null, 400)
-        res.status(400).json(resp)
-        return
-    }
-
-    if (name) payload.name = name
-    if (email) payload.email = email
-    if (password) payload.password = password
-    if (identity_type || identity_number || address) payload.profile = profile
-    if (identity_type) data.identity_type = identity_type
-    if (identity_number) data.identity_number = identity_number
-    if (address) data.address = address
-
-    try {
-        if (req.file) {
-            const stringFile = req.file.buffer.toString("base64");
-
-            const uploadFile = await imagekit.upload({
-                fileName: req.file.originalname,
-                file: stringFile,
-            });
-
-            if (uploadFile.url) {
-                payload.profile = profile
-                data.profile_picture = uploadFile.url
-            } else {
-                throw new Error('Failed to upload file');
-            }
-        }
-
-        const users = await prisma.user.update({
-            where: {
-                id: Number(id)
-            },
-            data: payload,
-            select: {
-                id: true,
-                name: true,
-                email: true,
-                profile: {
-                    select: {
-                        profile_picture: true,
-                        identity_type: true,
-                        identity_number: true,
-                        address: true
+                        address: true,
+                        created_at: true,
+                        updated_at: true
                     }
                 }
             }
@@ -403,6 +268,152 @@ async function Delete(req, res) {
         })
 
         let resp = ResponseTemplate(null, 'data deleted', null, 200)
+        res.status(200).json(resp)
+        return
+
+    } catch (error) {
+        let resp = ResponseTemplate(null, 'internal server error', error, 500)
+        res.status(500).json(resp)
+        return
+    }
+}
+
+async function GetUser(req, res) {
+
+    const { id, name, email, identity_type, identity_number, address, page = 1, limit = 10 } = req.query
+
+    const payload = {}
+
+    if (id) payload.id = Number(id)
+    if (name) payload.name = name
+    if (email) payload.email = email
+    if (identity_type) payload.identity_type = identity_type
+    if (identity_number) payload.identity_number = identity_number
+    if (address) payload.address = address
+
+    try {
+        const skip = ( page - 1 ) * limit
+
+        //informasi total data keseluruhan 
+        const resultCount = await prisma.user.count() // integer jumlah total data user
+
+        //generated total page
+        const totalPage = Math.ceil( resultCount / limit)
+
+        const users = await prisma.user.findMany({
+            //take : 10,
+            take : parseInt(limit),
+            //skip : 10
+            skip:skip,
+            where: payload,
+            select: {
+                id: true,
+                name: true,
+                email: true,
+                profile: {
+                    select: {
+                        profile_picture: true,
+                        identity_type: true,
+                        identity_number: true,
+                        address: true,
+                        created_at: true,
+                        updated_at: true
+                    }
+                }
+            },
+        });
+        
+        const pagination = {
+            current_page: page - 0, // ini - 0 merubah menjadi integer
+            total_page : totalPage,
+            total_data: resultCount,
+            data: users
+        }
+        const cekUser = (objectName) => {
+            return Object.keys(objectName).length === 0
+        }
+        
+        if (cekUser(users) === true) {
+            let resp = ResponseTemplate(null, 'data not found', null, 404)
+            res.status(404).json(resp)
+            return
+        }
+
+        let resp = ResponseTemplate(pagination, 'success', null, 200)
+        res.status(200).json(resp)
+        return
+
+    } catch (error) {
+        let resp = ResponseTemplate(null, 'internal server error', error, 500)
+        res.status(500).json(resp)
+        return
+    }
+}
+
+async function UpdateUser(req, res) {
+
+    const { id, name, email, password, identity_type, identity_number, address } = req.body
+
+    const payload = {}
+    const data = {}
+    const where = { user_id: Number(id) }
+    const update = {where,data}
+    const profile = {update}
+
+    if (!name && !email && !password && !req.file && !identity_type && !identity_number && !address) {
+        let resp = ResponseTemplate(null, 'bad request', null, 400)
+        res.status(400).json(resp)
+        return
+    }
+
+    if (name) payload.name = name
+    if (email) payload.email = email
+    if (password) payload.password = password
+    if (identity_type || identity_number || address) payload.profile = profile
+    if (identity_type) data.identity_type = identity_type
+    if (identity_number) data.identity_number = identity_number
+    if (address) data.address = address
+
+    try {
+        if (req.file) {
+            const stringFile = req.file.buffer.toString("base64");
+
+            const uploadFile = await imagekit.upload({
+                fileName: req.file.originalname,
+                file: stringFile,
+            });
+
+            if (uploadFile.url) {
+                payload.profile = profile
+                data.profile_picture = uploadFile.url
+            } else {
+                throw new Error('Failed to upload file');
+            }
+        }
+
+        const users = await prisma.user.update({
+            where: {
+                id: Number(id)
+            },
+            data: payload,
+            select: {
+                id: true,
+                name: true,
+                email: true,
+                profile: {
+                    select: {
+                        profile_picture: true,
+                        identity_type: true,
+                        identity_number: true,
+                        address: true,
+                        created_at: true,
+                        updated_at: true
+                    }
+                }
+            }
+        })
+
+        let resp = ResponseTemplate(users, 'success', null, 200)
         res.status(200).json(resp)
         return
 

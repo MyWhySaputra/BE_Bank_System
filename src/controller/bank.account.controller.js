@@ -43,10 +43,13 @@ async function AdminInsert(req, res) {
         const account = await prisma.bankAccounts.create({
             data: payload,
             select: {
+                id: true,
                 user_id: true,
                 bank_name: true,
                 bank_account_number: true,
-                balance: true
+                balance: true,
+                created_at: true,
+                updated_at: true
             }
         })
 
@@ -106,7 +109,9 @@ async function AdminGet(req, res) {
                             }
                         }
                     }
-                }
+                },
+                created_at: true,
+                updated_at: true
             }
         });
 
@@ -161,7 +166,16 @@ async function AdminUpdate(req, res) {
             where: {
                 id: Number(id)
             },
-            data: payload
+            data: payload,
+            select: {
+                id: true,
+                user_id: true,
+                bank_name: true,
+                bank_account_number: true,
+                balance: true,
+                created_at: true,
+                updated_at: true
+            }
         })
 
         let resp = ResponseTemplate(account, 'success', null, 200)
@@ -268,9 +282,12 @@ async function Insert(req, res) {
         const account = await prisma.bankAccounts.create({
             data: payload,
             select: {
+                id: true,
                 bank_name: true,
                 bank_account_number: true,
-                balance: true
+                balance: true,
+                created_at: true,
+                updated_at: true
             }
         })
 
@@ -331,7 +348,9 @@ async function Get(req, res) {
                             }
                         }
                     }
-                }
+                },
+                created_at: true,
+                updated_at: true
             }
         });
 
@@ -387,7 +406,15 @@ async function Update(req, res) {
             where: {
                 id: Number(id)
             },
-            data: payload
+            data: payload,
+            select: {
+                id: true,
+                bank_name: true,
+                bank_account_number: true,
+                balance: true,
+                created_at: true,
+                updated_at: true
+            }
         })
 
         let resp = ResponseTemplate(account, 'success', null, 200)
