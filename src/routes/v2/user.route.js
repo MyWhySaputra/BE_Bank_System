@@ -102,26 +102,28 @@ router.put('/users/', Auth, multer.single("profile_picture"), CheckUpdate, Updat
 
 /**
  * @swagger
- * /api/v2/users/{email}:
+ * /api/v2/users:
  *   delete:
  *     security:
  *      - bearerAuth: []
  *     tags:
  *      - "User"
  *     summary: Delete user
- *     parameters:
- *       - in: path
- *         name: email
- *         required: true
- *         description: The email of user
- *         schema:
- *           type: string
+ *     requestBody:
+ *        required: true
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                email:
+ *                  type: string
  *     responses:
  *       200:
  *         description: Successful response
  *       404:
  *         description: Not found
  */
-router.delete('/users/:email', Auth, Delete)
+router.delete('/users/', Auth, Delete)
 
 module.exports = router

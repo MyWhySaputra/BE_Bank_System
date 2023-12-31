@@ -102,27 +102,29 @@ router.put('/admin/', Auth, Admin, multer.single("profile_picture"), Update)
 
 /**
  * @swagger
- * /api/v2/admin/{email}:
+ * /api/v2/admin:
  *   delete:
  *     security:
  *      - bearerAuth: []
  *     tags:
  *      - "Admin"
  *     summary: Delete admin (ADMIN ONLY)
- *     parameters:
- *       - in: path
- *         name: email
- *         required: true
- *         description: The email of user
- *         schema:
- *           type: string
+ *     requestBody:
+ *        required: true
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                email:
+ *                  type: string
  *     responses:
  *       200:
  *         description: Successful response
  *       404:
  *         description: Not found
  */
-router.delete('/admin/:email', Auth, Admin, Delete)
+router.delete('/admin/', Auth, Admin, Delete)
 
 /**
  * @swagger

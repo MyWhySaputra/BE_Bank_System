@@ -220,7 +220,7 @@ async function Update(req, res) {
 
 async function Delete(req, res) {
 
-    const { email } = req.params
+    const { email } = req.body
 
     if (email !== req.user.email) {
         let resp = ResponseTemplate(null, 'email not same', null, 400)
