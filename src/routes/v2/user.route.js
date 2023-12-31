@@ -42,7 +42,7 @@ const multer = require("multer")()
  *       500:
  *         description: Internal server error
  */
-router.post('/users/', multer.single("profile_picture"), CheckRegister, Register)
+router.post('/users/', CheckRegister, multer.single("profile_picture"), Register)
 
 /**
  * @swagger

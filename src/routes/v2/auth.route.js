@@ -1,7 +1,7 @@
 const express = require('express')
 const router = express.Router()
 const { login, verifyEmail, forgetPassword, resetPassword } = require('../../controller/auth.controller')
-const { CheckLogin, CheckForget } = require('../../middleware/middleware')
+const { CheckLogin } = require('../../middleware/middleware')
 
 /**
  * @swagger
@@ -53,7 +53,7 @@ router.get('/auth/verify-email', verifyEmail)
  *       400:
  *         description: Bad request
  */
-router.post('/auth/forget-password', CheckForget, forgetPassword)
+router.post('/auth/forget-password', forgetPassword)
 
 router.get("/auth/reset-password", (req, res) => {
     const token = req.query.token

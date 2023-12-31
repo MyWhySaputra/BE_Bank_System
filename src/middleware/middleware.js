@@ -64,22 +64,6 @@ function CheckLogin(req, res, next) {
     next()
 }
 
-function ChackForget(req, res, next) {
-    const schema = Joi.object({
-        email: Joi.string().email().required()
-    })
-
-    const { error } = schema.validate(req.body)
-
-    if (error) {
-        let resp = ResponseTemplate(null, 'invalid request', error.details[0].message, 400)
-        res.status(400).json(resp)
-        return
-    }
-
-    next()
-}
-
 function CheckRegister(req, res, next) {
     const schema = Joi.object({
         name: Joi.string().max(255).required(),
@@ -104,6 +88,5 @@ module.exports = {
     Auth,
     Admin,
     CheckLogin,
-    ChackForget,
     CheckRegister
 }
