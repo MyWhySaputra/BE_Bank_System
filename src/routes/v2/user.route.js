@@ -1,7 +1,7 @@
 const express = require('express')
 const router = express.Router()
 const { Register, Get, Update, Delete } = require('../../controller/user.controller')
-const { Auth, CheckRegister } = require('../../middleware/middleware')
+const { Auth, CheckRegister, CheckUpdate } = require('../../middleware/middleware')
 
 const multer = require("multer")()
 
@@ -98,7 +98,7 @@ router.get('/users/', Auth, Get)
  *       400:
  *         description: Bad request
  */
-router.put('/users/', Auth, multer.single("profile_picture"), Update)
+router.put('/users/', Auth, multer.single("profile_picture"), CheckUpdate, Update)
 
 /**
  * @swagger

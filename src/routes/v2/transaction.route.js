@@ -1,7 +1,7 @@
 const express = require('express')
 const router = express.Router()
 const { Insert, Get, AdminGet, AdminUpdate } = require('../../controller/transaction.controller')
-const { Auth } = require('../../middleware/middleware')
+const { Auth, Admin } = require('../../middleware/middleware')
 
 /**
  * @swagger
@@ -91,7 +91,7 @@ router.get('/transactions/', Auth, Get)
  *       200:
  *         description: Successful response
  */
-router.get('/transactions/admin/', Auth, AdminGet)
+router.get('/transactions/admin/', Auth, Admin, AdminGet)
 
 /**
  * @swagger
@@ -126,6 +126,6 @@ router.get('/transactions/admin/', Auth, AdminGet)
  *       200:
  *         description: Successful response
  */
-router.put('/transactions/admin/:id', Auth, AdminUpdate)
+router.put('/transactions/admin/:id', Auth, Admin, AdminUpdate)
 
 module.exports = router

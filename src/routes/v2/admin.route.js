@@ -1,7 +1,7 @@
 const express = require('express')
 const router = express.Router()
 const { Register, Get, GetUser, Update, UpdateUser, Delete, DeleteUser } = require('../../controller/admin.controller')
-const { Auth } = require('../../middleware/middleware')
+const { Auth, Admin } = require('../../middleware/middleware')
 
 const multer = require("multer")()
 
@@ -52,14 +52,14 @@ router.post('/admin/', multer.single("profile_picture"), Register)
  *      - bearerAuth: []
  *     tags:
  *      - "Admin"
- *     summary: Check your id
+ *     summary: Check your id (ADMIN ONLY)
  *     responses:
  *       200:
  *         description: Successful response
  *       404:
  *         description: Not found
  */
-router.get('/admin/', Auth, Get)
+router.get('/admin/', Auth, Admin, Get)
 
 /**
  * @swagger
@@ -69,7 +69,7 @@ router.get('/admin/', Auth, Get)
  *      - bearerAuth: []
  *     tags:
  *      - "Admin"
- *     summary: Update admin
+ *     summary: Update admin (ADMIN ONLY)
  *     requestBody:
  *        required: true
  *        content:
@@ -98,7 +98,7 @@ router.get('/admin/', Auth, Get)
  *       400:
  *         description: Bad request
  */
-router.put('/admin/', Auth, multer.single("profile_picture"), Update)
+router.put('/admin/', Auth, Admin, multer.single("profile_picture"), Update)
 
 /**
  * @swagger
@@ -108,7 +108,7 @@ router.put('/admin/', Auth, multer.single("profile_picture"), Update)
  *      - bearerAuth: []
  *     tags:
  *      - "Admin"
- *     summary: Delete admin
+ *     summary: Delete admin (ADMIN ONLY)
  *     parameters:
  *       - in: path
  *         name: email
@@ -122,7 +122,7 @@ router.put('/admin/', Auth, multer.single("profile_picture"), Update)
  *       404:
  *         description: Not found
  */
-router.delete('/admin/:email', Auth, Delete)
+router.delete('/admin/:email', Auth, Admin, Delete)
 
 /**
  * @swagger
@@ -132,7 +132,7 @@ router.delete('/admin/:email', Auth, Delete)
  *      - bearerAuth: []
  *     tags:
  *      - "Admin"
- *     summary: Get all user
+ *     summary: Get all user (ADMIN ONLY)
  *     requestBody:
  *        required: false
  *        content:
@@ -158,7 +158,7 @@ router.delete('/admin/:email', Auth, Delete)
  *       404:
  *         description: Not found
  */
-router.get('/admin/get-user/', Auth, GetUser)
+router.get('/admin/get-user/', Auth, Admin, GetUser)
 
 /**
  * @swagger
@@ -168,7 +168,7 @@ router.get('/admin/get-user/', Auth, GetUser)
  *      - bearerAuth: []
  *     tags:
  *      - "Admin"
- *     summary: Update user
+ *     summary: Update user (ADMIN ONLY)
  *     requestBody:
  *        required: true
  *        content:
@@ -199,7 +199,7 @@ router.get('/admin/get-user/', Auth, GetUser)
  *       400:
  *         description: Bad request
  */
-router.put('/admin/update-user/', Auth, multer.single("profile_picture"), UpdateUser)
+router.put('/admin/update-user/', Auth, Admin, multer.single("profile_picture"), UpdateUser)
 
 /**
  * @swagger
@@ -209,7 +209,7 @@ router.put('/admin/update-user/', Auth, multer.single("profile_picture"), Update
  *      - bearerAuth: []
  *     tags:
  *      - "Admin"
- *     summary: Delete user
+ *     summary: Delete user (ADMIN ONLY)
  *     parameters:
  *       - in: path
  *         name: id
@@ -223,6 +223,6 @@ router.put('/admin/update-user/', Auth, multer.single("profile_picture"), Update
  *       404:
  *         description: Not found
  */
-router.delete('/admin/delete-user/:id', Auth, DeleteUser)
+router.delete('/admin/delete-user/:id', Auth, Admin, DeleteUser)
 
 module.exports = router

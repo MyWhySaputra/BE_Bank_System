@@ -59,96 +59,6 @@ async function Insert(req, res) {
     }
 }
 
-async function AdminGet(req, res) {
-
-    if (req.user.role !== 'ADMIN') {
-        let resp = ResponseTemplate(null, 'you are not admin', null, 404)
-        res.status(404).json(resp)
-        return
-    }
-
-    const { source_bank_number, destination_bank_number, amount, page = 1, limit = 10  } = req.query
-
-    const payload = {}
-
-    if (source_bank_number) payload.source_bank_number = source_bank_number
-    if (destination_bank_number) payload.destination_bank_number = destination_bank_number
-    if (amount) payload.amount = amount
-
-    try {
-
-        let skip = ( page - 1 ) * limit
-
-        //informasi total data keseluruhan 
-        const resultCount = await prisma.transactions.count() // integer jumlah total data user
-
-        //generated total page
-        const totalPage = Math.ceil( resultCount / limit)
-
-        const transaction = await prisma.transactions.findMany({
-            //take : 10,
-            take : parseInt(limit),
-            //skip : 10
-            skip:skip,
-            where: payload,
-            select: {
-                id: true,
-                source_bank_number: true,
-                bank_account_source: {
-                    select: {
-                        bank_name: true,
-                        bank_account_number: true,
-                        user: {
-                            select: {
-                                name: true,
-                            }
-                        }
-                    }
-                },
-                destination_bank_number: true,
-                bank_account_destination: {
-                    select: {
-                        bank_name: true,
-                        bank_account_number: true,
-                        user: {
-                            select: {
-                                name: true,
-                            }
-                        }
-                    }
-                },
-                amount: true,
-            }
-        });
-
-        const pagination = {
-            current_page: page - 0, // ini - 0 merubah menjadi integer
-            total_page : totalPage,
-            total_data: resultCount,
-            data: transaction
-        }
-
-        const cekTransaction = (objectName) => {
-            return Object.keys(objectName).length === 0
-        }
-
-        if (cekTransaction(transaction) === true) {
-            let resp = ResponseTemplate(null, 'data not found', null, 404)
-            res.status(404).json(resp)
-            return
-        }
-
-        let resp = ResponseTemplate(pagination, 'success', null, 200)
-        res.status(200).json(resp)
-        return
-
-    } catch (error) {
-        let resp = ResponseTemplate(null, 'internal server error', error, 500)
-        res.status(500).json(resp)
-        return
-    }
-}
-
 async function Get(req, res) {
 
     const { source_bank_number, destination_bank_number, page = 1, limit = 10 } = req.query
@@ -256,13 +166,91 @@ async function Get(req, res) {
     }
 }
 
-async function AdminUpdate(req, res) {
+async function AdminGet(req, res) {
 
-    if (req.user.role !== 'ADMIN') {
-        let resp = ResponseTemplate(null, 'you are not admin', null, 404)
-        res.status(404).json(resp)
+    const { source_bank_number, destination_bank_number, amount, page = 1, limit = 10  } = req.query
+
+    const payload = {}
+
+    if (source_bank_number) payload.source_bank_number = source_bank_number
+    if (destination_bank_number) payload.destination_bank_number = destination_bank_number
+    if (amount) payload.amount = amount
+
+    try {
+
+        let skip = ( page - 1 ) * limit
+
+        //informasi total data keseluruhan 
+        const resultCount = await prisma.transactions.count() // integer jumlah total data user
+
+        //generated total page
+        const totalPage = Math.ceil( resultCount / limit)
+
+        const transaction = await prisma.transactions.findMany({
+            //take : 10,
+            take : parseInt(limit),
+            //skip : 10
+            skip:skip,
+            where: payload,
+            select: {
+                id: true,
+                source_bank_number: true,
+                bank_account_source: {
+                    select: {
+                        bank_name: true,
+                        bank_account_number: true,
+                        user: {
+                            select: {
+                                name: true,
+                            }
+                        }
+                    }
+                },
+                destination_bank_number: true,
+                bank_account_destination: {
+                    select: {
+                        bank_name: true,
+                        bank_account_number: true,
+                        user: {
+                            select: {
+                                name: true,
+                            }
+                        }
+                    }
+                },
+                amount: true,
+            }
+        });
+
+        const pagination = {
+            current_page: page - 0, // ini - 0 merubah menjadi integer
+            total_page : totalPage,
+            total_data: resultCount,
+            data: transaction
+        }
+
+        const cekTransaction = (objectName) => {
+            return Object.keys(objectName).length === 0
+        }
+
+        if (cekTransaction(transaction) === true) {
+            let resp = ResponseTemplate(null, 'data not found', null, 404)
+            res.status(404).json(resp)
+            return
+        }
+
+        let resp = ResponseTemplate(pagination, 'success', null, 200)
+        res.status(200).json(resp)
+        return
+
+    } catch (error) {
+        let resp = ResponseTemplate(null, 'internal server error', error, 500)
+        res.status(500).json(resp)
         return
     }
+}
+
+async function AdminUpdate(req, res) {
 
     const { source_bank_number, destination_bank_number, amount } = req.body
     const { id } = req.params

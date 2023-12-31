@@ -101,12 +101,6 @@ async function Register(req, res) {
 
 async function Get(req, res) {
 
-    if (req.user.role !== 'ADMIN') {
-        let resp = ResponseTemplate(null, 'you are not admin', null, 404)
-        res.status(404).json(resp)
-        return
-    }
-
     const id = req.user.id
 
     try {
@@ -147,12 +141,6 @@ async function Get(req, res) {
 }
 
 async function GetUser(req, res) {
-
-    if (req.user.role !== 'ADMIN') {
-        let resp = ResponseTemplate(null, 'you are not admin', null, 404)
-        res.status(404).json(resp)
-        return
-    }
 
     const { id, name, email, identity_type, identity_number, address, page = 1, limit = 10 } = req.query
 
@@ -222,12 +210,6 @@ async function GetUser(req, res) {
 }
 
 async function Update(req, res) {
-
-    if (req.user.role !== 'ADMIN') {
-        let resp = ResponseTemplate(null, 'you are not admin', null, 404)
-        res.status(404).json(resp)
-        return
-    }
 
     const { name, email, password, identity_type, identity_number, address } = req.body
     const id = req.user.id
@@ -302,12 +284,6 @@ async function Update(req, res) {
 
 async function UpdateUser(req, res) {
 
-    if (req.user.role !== 'ADMIN') {
-        let resp = ResponseTemplate(null, 'you are not admin', null, 404)
-        res.status(404).json(resp)
-        return
-    }
-
     const { id, name, email, password, identity_type, identity_number, address } = req.body
 
     const payload = {}
@@ -380,12 +356,6 @@ async function UpdateUser(req, res) {
 
 async function Delete(req, res) {
 
-    if (req.user.role !== 'ADMIN') {
-        let resp = ResponseTemplate(null, 'you are not admin', null, 404)
-        res.status(404).json(resp)
-        return
-    }
-
     const { email } = req.params
 
     if (email !== req.user.email) {
@@ -444,12 +414,6 @@ async function Delete(req, res) {
 }
 
 async function DeleteUser(req, res) {
-
-    if (req.user.role !== 'ADMIN') {
-        let resp = ResponseTemplate(null, 'you are not admin', null, 404)
-        res.status(404).json(resp)
-        return
-    }
 
     const { id } = req.params
 
