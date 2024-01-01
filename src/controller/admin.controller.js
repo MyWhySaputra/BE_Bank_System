@@ -280,11 +280,10 @@ async function Delete(req, res) {
 
 async function GetUser(req, res) {
 
-    const { id, name, email, identity_type, identity_number, address, page = 1, limit = 10 } = req.query
+    const { name, email, identity_type, identity_number, address, page = 1, limit = 10 } = req.query
 
     const payload = {}
 
-    if (id) payload.id = Number(id)
     if (name) payload.name = name
     if (email) payload.email = email
     if (identity_type) payload.identity_type = identity_type
@@ -352,7 +351,8 @@ async function GetUser(req, res) {
 
 async function UpdateUser(req, res) {
 
-    const { id, name, email, password, identity_type, identity_number, address } = req.body
+    const { name, email, password, identity_type, identity_number, address } = req.body
+    const { id } = req.params
 
     const payload = {}
     const data = {}

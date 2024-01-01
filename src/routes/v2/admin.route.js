@@ -142,8 +142,6 @@ router.delete('/admin/', Auth, Admin, Delete)
  *            schema:
  *              type: object
  *              properties:
- *                id:
- *                  type: string
  *                name:
  *                  type: string
  *                email:
@@ -164,7 +162,7 @@ router.get('/admin/get-user/', Auth, Admin, GetUser)
 
 /**
  * @swagger
- * /api/v2/admin/update-user:
+ * /api/v2/admin/update-user/{id}:
  *   put:
  *     security:
  *      - bearerAuth: []
@@ -201,7 +199,7 @@ router.get('/admin/get-user/', Auth, Admin, GetUser)
  *       400:
  *         description: Bad request
  */
-router.put('/admin/update-user/', Auth, Admin, multer.single("profile_picture"), UpdateUser)
+router.put('/admin/update-user/:id', Auth, Admin, multer.single("profile_picture"), UpdateUser)
 
 /**
  * @swagger

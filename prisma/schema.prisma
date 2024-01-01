@@ -18,7 +18,7 @@ model user {
   role        Role      @default(USER)
   is_verified Boolean   @default(false)
   createAt    DateTime  @default(now())
-  updateAt    DateTime? @default(now())
+  updateAt    DateTime  @updatedAt
   deletedAt   DateTime?
   profile     profile[]
   bank_accounts bankAccounts[]
@@ -37,7 +37,7 @@ model profile {
   identity_number String    @db.VarChar(100)
   address         String    @db.Text
   createAt        DateTime  @default(now())
-  updateAt        DateTime? @default(now())
+  updateAt        DateTime  @updatedAt
   deletedAt       DateTime?
   user user @relation(fields: [user_id], references: [id])
 }
@@ -49,7 +49,7 @@ model bankAccounts {
   bank_account_number Int       @db.Integer @unique
   balance             Int       @db.Integer
   createAt            DateTime  @default(now())
-  updateAt            DateTime? @default(now())
+  updateAt            DateTime  @updatedAt
   deletedAt           DateTime?
   user user @relation(fields: [user_id], references: [id])
   source       transactions[] @relation("transactionSourceAccount")
@@ -62,7 +62,7 @@ model transactions {
   destination_bank_number Int       @db.Integer
   amount                  Int       @db.Integer
   createAt                DateTime  @default(now())
-  updateAt                DateTime? @default(now())
+  updateAt                DateTime  @updatedAt
   deletedAt               DateTime?
   bank_account_source      bankAccounts @relation(name: "transactionSourceAccount", fields: [source_bank_number], references: [bank_account_number])
   bank_account_destination bankAccounts @relation(name: "transactionDestinationAccount", fields: [destination_bank_number], references: [bank_account_number])
