@@ -1,9 +1,19 @@
-const express = require('express')
-const router = express.Router()
-const { Register, Get, Update, Delete } = require('../../controller/user.controller')
-const { Auth, CheckRegister, CheckUpdate } = require('../../middleware/middleware')
+const express = require("express");
+const router = express.Router();
+const {
+    Register,
+    Get,
+    Update,
+    Delete,
+} = require("../../controller/user.controller");
+const {
+    Auth,
+    CheckRegister,
+    CheckUpdate,
+    CheckDelete,
+} = require("../../middleware/middleware");
 
-const multer = require("multer")()
+const multer = require("multer")();
 
 /**
  * @swagger
@@ -42,7 +52,12 @@ const multer = require("multer")()
  *       500:
  *         description: Internal server error
  */
-router.post('/users/', CheckRegister, multer.single("profile_picture"), Register)
+router.post(
+    "/users/",
+    CheckRegister,
+    multer.single("profile_picture"),
+    Register
+);
 
 /**
  * @swagger
@@ -59,7 +74,7 @@ router.post('/users/', CheckRegister, multer.single("profile_picture"), Register
  *       404:
  *         description: Not found
  */
-router.get('/users/', Auth, Get)
+router.get("/users/", Auth, Get);
 
 /**
  * @swagger
@@ -98,7 +113,13 @@ router.get('/users/', Auth, Get)
  *       400:
  *         description: Bad request
  */
-router.put('/users/', Auth, multer.single("profile_picture"), CheckUpdate, Update)
+router.put(
+    "/users/",
+    Auth,
+    CheckUpdate,
+    multer.single("profile_picture"),
+    Update
+);
 
 /**
  * @swagger
@@ -124,6 +145,6 @@ router.put('/users/', Auth, multer.single("profile_picture"), CheckUpdate, Updat
  *       404:
  *         description: Not found
  */
-router.delete('/users/', Auth, Delete)
+router.delete("/users/", Auth, CheckDelete, Delete);
 
-module.exports = router
+module.exports = router;

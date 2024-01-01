@@ -1,82 +1,80 @@
-
-const { ResponseTemplate } = require('../helper/template.helper')
-const Joi = require('joi')
-const jwt = require('jsonwebtoken')
+const { ResponseTemplate } = require("../helper/template.helper");
+const Joi = require("joi");
+const jwt = require("jsonwebtoken");
 
 async function Auth(req, res, next) {
-
-    const { authorization } = req.headers
+    const { authorization } = req.headers;
 
     if (!authorization) {
-        let resp = ResponseTemplate(null, 'user unauthorized', null, 400)
-        res.status(400).json(resp)
-        return
+        let resp = ResponseTemplate(null, "user unauthorized", null, 400);
+        res.status(400).json(resp);
+        return;
     }
 
     try {
+        const user = await jwt.verify(authorization, process.env.SECRET_KEY);
 
-        const user = await jwt.verify(authorization, process.env.SECRET_KEY)
+        req.user = user;
 
-        req.user = user
-
-        next()
-
+        next();
     } catch (error) {
-        let resp = ResponseTemplate(null, 'user not authorized', null, 401)
-        res.status(401).json(resp)
-        return
+        let resp = ResponseTemplate(null, "user not authorized", null, 401);
+        res.status(401).json(resp);
+        return;
     }
 }
 
 async function Admin(req, res, next) {
-
     try {
-
-        if (req.user.role !== 'ADMIN') {
-            let resp = ResponseTemplate(null, 'you are not admin', null, 404)
-            res.status(404).json(resp)
-            return
+        if (req.user.role !== "ADMIN") {
+            let resp = ResponseTemplate(null, "you are not admin", null, 404);
+            res.status(404).json(resp);
+            return;
         }
 
-        next()
-
+        next();
     } catch (error) {
-        let resp = ResponseTemplate(null, 'internal server error', error, 500)
-        res.status(500).json(resp)
-        return
+        let resp = ResponseTemplate(null, "internal server error", error, 500);
+        res.status(500).json(resp);
+        return;
     }
 }
 
 function CheckLogin(req, res, next) {
     const schema = Joi.object({
         email: Joi.string().email().required(),
-        password: Joi.string().min(6).required()
-    })
-
-    const { error } = schema.validate(req.body)
-
-    if (error) {
-        let resp = ResponseTemplate(null, 'invalid request', error.details[0].message, 400)
-        res.status(400).json(resp)
-        return
-    }
-
-    next()
-}
-
-function CheckForgot(req, res, next) {
-    const schema = Joi.object({
-        email: Joi.string().email().required()
+        password: Joi.string().min(6).required(),
     });
 
     const { error } = schema.validate(req.body);
 
     if (error) {
         let resp = ResponseTemplate(
-        null,
-        "invalid request",
-        error.details[0].message,
-        400
+            null,
+            "invalid request",
+            error.details[0].message,
+            400
+        );
+        res.status(400).json(resp);
+        return;
+    }
+
+    next();
+}
+
+function CheckForgot(req, res, next) {
+    const schema = Joi.object({
+        email: Joi.string().email().required(),
+    });
+
+    const { error } = schema.validate(req.body);
+
+    if (error) {
+        let resp = ResponseTemplate(
+            null,
+            "invalid request",
+            error.details[0].message,
+            400
         );
         res.status(400).json(resp);
         return;
@@ -92,16 +90,21 @@ function CheckRegister(req, res, next) {
         password: Joi.string().min(6).required(),
         identity_type: Joi.string().required(),
         identity_number: Joi.string().min(14).required(),
-        address: Joi.string().required()
-    })
+        address: Joi.string().required(),
+    });
 
-    const { error } = schema.validate(req.body)
+    const { error } = schema.validate(req.body);
     if (error) {
-        let resp = ResponseTemplate(null, 'invalid request', error.details[0].message, 400)
-        res.status(400).json(resp)
-        return
+        let resp = ResponseTemplate(
+            null,
+            "invalid request",
+            error.details[0].message,
+            400
+        );
+        res.status(400).json(resp);
+        return;
     }
-    next()
+    next();
 }
 
 function CheckUpdate(req, res, next) {
@@ -111,20 +114,156 @@ function CheckUpdate(req, res, next) {
         password: Joi.string().min(6),
         identity_type: Joi.string(),
         identity_number: Joi.string().min(14),
-        address: Joi.string()
-    })
+        address: Joi.string(),
+    });
 
-    const { error } = schema.validate(req.body)
+    const { error } = schema.validate(req.body);
     if (error) {
-        let resp = ResponseTemplate(null, 'invalid request', error.details[0].message, 400)
-        res.status(400).json(resp)
-        return
+        let resp = ResponseTemplate(
+            null,
+            "invalid request",
+            error.details[0].message,
+            400
+        );
+        res.status(400).json(resp);
+        return;
     }
-    next()
+    next();
 }
 
+function CheckDelete(req, res, next) {
+    const schema = Joi.object({
+        email: Joi.string().email().required(),
+    });
 
+    const { error } = schema.validate(req.body);
 
+    if (error) {
+        let resp = ResponseTemplate(
+            null,
+            "invalid request",
+            error.details[0].message,
+            400
+        );
+        res.status(400).json(resp);
+        return;
+    }
+
+    next();
+}
+
+function CheckGetAllUser(req, res, next) {
+    const schema = Joi.object({
+        name: Joi.string().max(255),
+        email: Joi.string().email(),
+        identity_type: Joi.string(),
+        identity_number: Joi.string().min(14),
+        address: Joi.string(),
+    });
+
+    const { error } = schema.validate(req.query);
+    if (error) {
+        let resp = ResponseTemplate(
+            null,
+            "invalid request",
+            error.details[0].message,
+            400
+        );
+        res.status(400).json(resp);
+        return;
+    }
+    next();
+}
+
+function CheckUpdateUser(req, res, next) {
+    const schema = Joi.object({
+        name: Joi.string().max(255),
+        email: Joi.string().email(),
+        password: Joi.string().min(6),
+        identity_type: Joi.string(),
+        identity_number: Joi.string().min(14),
+        address: Joi.string(),
+    });
+
+    const { error } = schema.validate(req.body);
+    if (error) {
+        let resp = ResponseTemplate(
+            null,
+            "invalid request",
+            error.details[0].message,
+            400
+        );
+        res.status(400).json(resp);
+        return;
+    }
+    next();
+}
+
+function CheckBankAccountInsertAdmin(req, res, next) {
+    const schema = Joi.object({
+        user_id: Joi.string().required(),
+        bank_name: Joi.string().required(),
+        bank_account_number: Joi.string().required(),
+        balance: Joi.string().required(),
+    });
+
+    const { error } = schema.validate(req.body);
+    if (error) {
+        let resp = ResponseTemplate(
+            null,
+            "invalid request",
+            error.details[0].message,
+            400
+        );
+        res.status(400).json(resp);
+        return;
+    }
+    next();
+}
+
+function CheckBankAccountGetAdmin(req, res, next) {
+    const schema = Joi.object({
+        user_id: Joi.string(),
+        bank_name: Joi.string(),
+        bank_account_number: Joi.string(),
+        balance: Joi.string(),
+    });
+
+    const { error } = schema.validate(req.query);
+    if (error) {
+        let resp = ResponseTemplate(
+            null,
+            "invalid request",
+            error.details[0].message,
+            400
+        );
+        res.status(400).json(resp);
+        return;
+    }
+    next();
+}
+
+function CheckBankAccountUpdateAdmin(req, res, next) {
+    const schema = Joi.object({
+        user_id: Joi.string(),
+        bank_name: Joi.string(),
+        bank_account_number: Joi.string(),
+        balance: Joi.string(),
+    });
+
+    const { error } = schema.validate(req.body);
+    if (error) {
+        let resp = ResponseTemplate(
+            null,
+            "invalid request",
+            error.details[0].message,
+            400
+        );
+        res.status(400).json(resp);
+        return;
+    }
+    next();
+}
 
 module.exports = {
     Auth,
@@ -132,5 +271,11 @@ module.exports = {
     CheckLogin,
     CheckForgot,
     CheckRegister,
-    CheckUpdate
-}
+    CheckUpdate,
+    CheckDelete,
+    CheckGetAllUser,
+    CheckUpdateUser,
+    CheckBankAccountInsertAdmin,
+    CheckBankAccountGetAdmin,
+    CheckBankAccountUpdateAdmin,
+};

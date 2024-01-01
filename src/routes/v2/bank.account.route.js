@@ -1,7 +1,22 @@
-const express = require('express')
-const router = express.Router()
-const { AdminInsert, Insert, AdminGet, Get, AdminUpdate, Update, AdminDelete, Delete} = require('../../controller/bank.account.controller')
-const { Auth, Admin } = require('../../middleware/middleware')
+const express = require("express");
+const router = express.Router();
+const {
+    AdminInsert,
+    Insert,
+    AdminGet,
+    Get,
+    AdminUpdate,
+    Update,
+    AdminDelete,
+    Delete,
+} = require("../../controller/bank.account.controller");
+const {
+    Auth,
+    Admin,
+    CheckBankAccountInsertAdmin,
+    CheckBankAccountGetAdmin,
+    CheckBankAccountUpdateAdmin,
+} = require("../../middleware/middleware");
 
 /**
  * @swagger
@@ -35,7 +50,13 @@ const { Auth, Admin } = require('../../middleware/middleware')
  *       404:
  *         description: Not found
  */
-router.post('/bank_accounts/admin/', Auth, Admin, AdminInsert)
+router.post(
+    "/bank_accounts/admin/",
+    Auth,
+    Admin,
+    CheckBankAccountInsertAdmin,
+    AdminInsert
+);
 
 /**
  * @swagger
@@ -77,7 +98,13 @@ router.post('/bank_accounts/admin/', Auth, Admin, AdminInsert)
  *       404:
  *         description: Not found
  */
-router.get('/bank_accounts/admin/', Auth, Admin, AdminGet)
+router.get(
+    "/bank_accounts/admin/",
+    Auth,
+    Admin,
+    CheckBankAccountGetAdmin,
+    AdminGet
+);
 
 /**
  * @swagger
@@ -116,7 +143,13 @@ router.get('/bank_accounts/admin/', Auth, Admin, AdminGet)
  *       400:
  *         description: Bad request
  */
-router.put('/bank_accounts/admin/:id', Auth, Admin, AdminUpdate)
+router.put(
+    "/bank_accounts/admin/:id",
+    Auth,
+    Admin,
+    CheckBankAccountUpdateAdmin,
+    AdminUpdate
+);
 
 /**
  * @swagger
@@ -140,7 +173,12 @@ router.put('/bank_accounts/admin/:id', Auth, Admin, AdminUpdate)
  *       404:
  *         description: Not found
  */
-router.delete('/bank_accounts/admin/:bank_account_number', Auth, Admin, AdminDelete)
+router.delete(
+    "/bank_accounts/admin/:bank_account_number",
+    Auth,
+    Admin,
+    AdminDelete
+);
 
 /**
  * @swagger
@@ -172,7 +210,7 @@ router.delete('/bank_accounts/admin/:bank_account_number', Auth, Admin, AdminDel
  *       404:
  *         description: Not found
  */
-router.post('/bank_accounts/', Auth, Insert)
+router.post("/bank_accounts/", Auth, Insert);
 
 /**
  * @swagger
@@ -208,7 +246,7 @@ router.post('/bank_accounts/', Auth, Insert)
  *       404:
  *         description: Not found
  */
-router.get('/bank_accounts/', Auth, Get)
+router.get("/bank_accounts/", Auth, Get);
 
 /**
  * @swagger
@@ -245,7 +283,7 @@ router.get('/bank_accounts/', Auth, Get)
  *       400:
  *         description: Bad request
  */
-router.put('/bank_accounts/:id', Auth, Update)
+router.put("/bank_accounts/:id", Auth, Update);
 
 /**
  * @swagger
@@ -269,7 +307,6 @@ router.put('/bank_accounts/:id', Auth, Update)
  *       404:
  *         description: Not found
  */
-router.delete('/bank_accounts/:bank_account_number', Auth, Delete)
+router.delete("/bank_accounts/:bank_account_number", Auth, Delete);
 
-
-module.exports = router
+module.exports = router;

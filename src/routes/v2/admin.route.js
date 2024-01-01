@@ -1,9 +1,25 @@
-const express = require('express')
-const router = express.Router()
-const { Register, Get, GetUser, Update, UpdateUser, Delete, DeleteUser } = require('../../controller/admin.controller')
-const { Auth, Admin } = require('../../middleware/middleware')
+const express = require("express");
+const router = express.Router();
+const {
+    Register,
+    Get,
+    GetUser,
+    Update,
+    UpdateUser,
+    Delete,
+    DeleteUser,
+} = require("../../controller/admin.controller");
+const {
+    Auth,
+    Admin,
+    CheckRegister,
+    CheckUpdate,
+    CheckDelete,
+    CheckGetAllUser,
+    CheckUpdateUser,
+} = require("../../middleware/middleware");
 
-const multer = require("multer")()
+const multer = require("multer")();
 
 /**
  * @swagger
@@ -42,7 +58,12 @@ const multer = require("multer")()
  *       500:
  *         description: Internal server error
  */
-router.post('/admin/', multer.single("profile_picture"), Register)
+router.post(
+    "/admin/",
+    CheckRegister,
+    multer.single("profile_picture"),
+    Register
+);
 
 /**
  * @swagger
@@ -59,7 +80,7 @@ router.post('/admin/', multer.single("profile_picture"), Register)
  *       404:
  *         description: Not found
  */
-router.get('/admin/', Auth, Admin, Get)
+router.get("/admin/", Auth, Admin, Get);
 
 /**
  * @swagger
@@ -98,7 +119,14 @@ router.get('/admin/', Auth, Admin, Get)
  *       400:
  *         description: Bad request
  */
-router.put('/admin/', Auth, Admin, multer.single("profile_picture"), Update)
+router.put(
+    "/admin/",
+    Auth,
+    Admin,
+    CheckUpdate,
+    multer.single("profile_picture"),
+    Update
+);
 
 /**
  * @swagger
@@ -124,7 +152,7 @@ router.put('/admin/', Auth, Admin, multer.single("profile_picture"), Update)
  *       404:
  *         description: Not found
  */
-router.delete('/admin/', Auth, Admin, Delete)
+router.delete("/admin/", Auth, Admin, CheckDelete, Delete);
 
 /**
  * @swagger
@@ -172,7 +200,7 @@ router.delete('/admin/', Auth, Admin, Delete)
  *       404:
  *         description: Not found
  */
-router.get('/admin/get-user/', Auth, Admin, GetUser)
+router.get("/admin/get-user/", Auth, Admin, CheckGetAllUser, GetUser);
 
 /**
  * @swagger
@@ -218,7 +246,14 @@ router.get('/admin/get-user/', Auth, Admin, GetUser)
  *       400:
  *         description: Bad request
  */
-router.put('/admin/update-user/:id', Auth, Admin, multer.single("profile_picture"), UpdateUser)
+router.put(
+    "/admin/update-user/:id",
+    Auth,
+    Admin,
+    CheckUpdateUser,
+    multer.single("profile_picture"),
+    UpdateUser
+);
 
 /**
  * @swagger
@@ -242,6 +277,6 @@ router.put('/admin/update-user/:id', Auth, Admin, multer.single("profile_picture
  *       404:
  *         description: Not found
  */
-router.delete('/admin/delete-user/:id', Auth, Admin, DeleteUser)
+router.delete("/admin/delete-user/:id", Auth, Admin, DeleteUser);
 
-module.exports = router
+module.exports = router;
