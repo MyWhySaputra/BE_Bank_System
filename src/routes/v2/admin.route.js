@@ -135,23 +135,37 @@ router.delete('/admin/', Auth, Admin, Delete)
  *     tags:
  *      - "Admin"
  *     summary: Get all user (ADMIN ONLY)
- *     requestBody:
- *        required: false
- *        content:
- *          application/json:
- *            schema:
- *              type: object
- *              properties:
- *                name:
- *                  type: string
- *                email:
- *                  type: string
- *                identity_type:
- *                  type: string
- *                identity_number:
- *                  type: string
- *                address:
- *                  type: string
+ *     parameters:
+ *       - in: query
+ *         name: name
+ *         required: false
+ *         description: The name of user
+ *         schema:
+ *           type: string
+ *       - in: query
+ *         name: email
+ *         required: false
+ *         description: The email of user
+ *         schema:
+ *           type: string
+ *       - in: query
+ *         name: identity_type
+ *         required: false
+ *         description: The identity_type of user
+ *         schema:
+ *           type: string
+ *       - in: query
+ *         name: identity_number
+ *         required: false
+ *         description: The identity_number of user
+ *         schema:
+ *           type: string
+ *       - in: query
+ *         name: address
+ *         required: false
+ *         description: The address of user
+ *         schema:
+ *           type: string
  *     responses:
  *       200:
  *         description: Successful response
@@ -169,6 +183,13 @@ router.get('/admin/get-user/', Auth, Admin, GetUser)
  *     tags:
  *      - "Admin"
  *     summary: Update user (ADMIN ONLY)
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         description: The id of user
+ *         schema:
+ *           type: string
  *     requestBody:
  *        required: true
  *        content:
@@ -176,8 +197,6 @@ router.get('/admin/get-user/', Auth, Admin, GetUser)
  *            schema:
  *              type: object
  *              properties:
- *                id:
- *                  type: string
  *                name:
  *                  type: string
  *                email:
