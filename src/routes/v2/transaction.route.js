@@ -11,6 +11,8 @@ const {
     Admin,
     CheckTransactionInsert,
     CheckTransactionGet,
+    CheckBankAccountGetAdmin,
+    CheckTransactionUpdateAdmin,
 } = require("../../middleware/middleware");
 
 /**
@@ -101,7 +103,7 @@ router.get("/transactions/", Auth, CheckTransactionGet, Get);
  *       200:
  *         description: Successful response
  */
-router.get("/transactions/admin/", Auth, Admin, CheckTransactionGet, AdminGet);
+router.get("/transactions/admin/", Auth, Admin, CheckBankAccountGetAdmin, AdminGet);
 
 /**
  * @swagger
@@ -136,6 +138,6 @@ router.get("/transactions/admin/", Auth, Admin, CheckTransactionGet, AdminGet);
  *       200:
  *         description: Successful response
  */
-router.put("/transactions/admin/:id", Auth, Admin, AdminUpdate);
+router.put("/transactions/admin/:id", Auth, Admin, CheckTransactionUpdateAdmin, AdminUpdate);
 
 module.exports = router;
