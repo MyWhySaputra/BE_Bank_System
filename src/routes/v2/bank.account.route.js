@@ -16,6 +16,9 @@ const {
     CheckBankAccountInsertAdmin,
     CheckBankAccountGetAdmin,
     CheckBankAccountUpdateAdmin,
+    CheckBankAccountInsert,
+    CheckBankAccountGet,
+    CheckBankAccountUpdate,
 } = require("../../middleware/middleware");
 
 /**
@@ -210,7 +213,7 @@ router.delete(
  *       404:
  *         description: Not found
  */
-router.post("/bank_accounts/", Auth, Insert);
+router.post("/bank_accounts/", Auth, CheckBankAccountInsert, Insert);
 
 /**
  * @swagger
@@ -246,7 +249,7 @@ router.post("/bank_accounts/", Auth, Insert);
  *       404:
  *         description: Not found
  */
-router.get("/bank_accounts/", Auth, Get);
+router.get("/bank_accounts/", Auth, CheckBankAccountGet, Get);
 
 /**
  * @swagger
@@ -283,7 +286,7 @@ router.get("/bank_accounts/", Auth, Get);
  *       400:
  *         description: Bad request
  */
-router.put("/bank_accounts/:id", Auth, Update);
+router.put("/bank_accounts/:id", Auth, CheckBankAccountUpdate, Update);
 
 /**
  * @swagger

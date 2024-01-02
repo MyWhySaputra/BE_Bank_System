@@ -265,6 +265,152 @@ function CheckBankAccountUpdateAdmin(req, res, next) {
     next();
 }
 
+function CheckBankAccountInsert(req, res, next) {
+    const schema = Joi.object({
+        bank_name: Joi.string().required(),
+        bank_account_number: Joi.string().required(),
+        balance: Joi.string().required(),
+    });
+
+    const { error } = schema.validate(req.body);
+    if (error) {
+        let resp = ResponseTemplate(
+            null,
+            "invalid request",
+            error.details[0].message,
+            400
+        );
+        res.status(400).json(resp);
+        return;
+    }
+    next();
+}
+
+function CheckBankAccountGet(req, res, next) {
+    const schema = Joi.object({
+        bank_name: Joi.string(),
+        bank_account_number: Joi.string(),
+        balance: Joi.string(),
+    });
+
+    const { error } = schema.validate(req.query);
+    if (error) {
+        let resp = ResponseTemplate(
+            null,
+            "invalid request",
+            error.details[0].message,
+            400
+        );
+        res.status(400).json(resp);
+        return;
+    }
+    next();
+}
+
+function CheckBankAccountUpdate(req, res, next) {
+    const schema = Joi.object({
+        bank_name: Joi.string(),
+        bank_account_number: Joi.string(),
+        balance: Joi.string(),
+    });
+
+    const { error } = schema.validate(req.body);
+    if (error) {
+        let resp = ResponseTemplate(
+            null,
+            "invalid request",
+            error.details[0].message,
+            400
+        );
+        res.status(400).json(resp);
+        return;
+    }
+    next();
+}
+
+function CheckTransactionInsert(req, res, next) {
+    const schema = Joi.object({
+        source_bank_number: Joi.string().required(),
+        destination_bank_number: Joi.string().required(),
+        amount: Joi.string().required(),
+    });
+
+    const { error } = schema.validate(req.body);
+    if (error) {
+        let resp = ResponseTemplate(
+            null,
+            "invalid request",
+            error.details[0].message,
+            400
+        );
+        res.status(400).json(resp);
+        return;
+    }
+    next();
+}
+
+function CheckTransactionGet(req, res, next) {
+    const schema = Joi.object({
+        source_bank_number: Joi.string(),
+        destination_bank_number: Joi.string(),
+    });
+
+    const { error } = schema.validate(req.query);
+    if (error) {
+        let resp = ResponseTemplate(
+            null,
+            "invalid request",
+            error.details[0].message,
+            400
+        );
+        res.status(400).json(resp);
+        return;
+    }
+    next();
+}
+
+function CheckTransactionGetAdmin(req, res, next) {
+    const schema = Joi.object({
+        source_bank_number: Joi.string(),
+        destination_bank_number: Joi.string(),
+        amount: Joi.string(),
+    });
+
+    const { error } = schema.validate(req.query);
+    if (error) {
+        let resp = ResponseTemplate(
+            null,
+            "invalid request",
+            error.details[0].message,
+            400
+        );
+        res.status(400).json(resp);
+        return;
+    }
+    next();
+}
+
+function CheckTransactionUpdateAdmin(req, res, next) {
+    const schema = Joi.object({
+        source_bank_number: Joi.string(),
+        destination_bank_number: Joi.string(),
+        amount: Joi.string(),
+    });
+
+    const { error } = schema.validate(req.body);
+    if (error) {
+        let resp = ResponseTemplate(
+            null,
+            "invalid request",
+            error.details[0].message,
+            400
+        );
+        res.status(400).json(resp);
+        return;
+    }
+    next();
+}
+
 module.exports = {
     Auth,
     Admin,
@@ -278,4 +424,10 @@ module.exports = {
     CheckBankAccountInsertAdmin,
     CheckBankAccountGetAdmin,
     CheckBankAccountUpdateAdmin,
+    CheckBankAccountInsert,
+    CheckBankAccountGet,
+    CheckBankAccountUpdate,
+    CheckTransactionInsert,
+    CheckTransactionGet,
+    CheckTransactionGetAdmin,
 };

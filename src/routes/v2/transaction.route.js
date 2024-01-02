@@ -6,7 +6,12 @@ const {
     AdminGet,
     AdminUpdate,
 } = require("../../controller/transaction.controller");
-const { Auth, Admin } = require("../../middleware/middleware");
+const {
+    Auth,
+    Admin,
+    CheckTransactionInsert,
+    CheckTransactionGet,
+} = require("../../middleware/middleware");
 
 /**
  * @swagger
@@ -34,7 +39,7 @@ const { Auth, Admin } = require("../../middleware/middleware");
  *       200:
  *         description: Successful response
  */
-router.post("/transactions/", Auth, Insert);
+router.post("/transactions/", Auth, CheckTransactionInsert, Insert);
 
 /**
  * @swagger
@@ -62,7 +67,7 @@ router.post("/transactions/", Auth, Insert);
  *       200:
  *         description: Successful response
  */
-router.get("/transactions/", Auth, Get);
+router.get("/transactions/", Auth, CheckTransactionGet, Get);
 
 /**
  * @swagger
@@ -96,7 +101,7 @@ router.get("/transactions/", Auth, Get);
  *       200:
  *         description: Successful response
  */
-router.get("/transactions/admin/", Auth, Admin, AdminGet);
+router.get("/transactions/admin/", Auth, Admin, CheckTransactionGet, AdminGet);
 
 /**
  * @swagger
