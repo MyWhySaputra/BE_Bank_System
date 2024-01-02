@@ -47,7 +47,7 @@ const multer = require("multer")();
  *                identity_type:
  *                  type: string
  *                identity_number:
- *                  type: string
+ *                  type: integer
  *                address:
  *                  type: string
  *     responses:
@@ -110,7 +110,7 @@ router.get("/admin/", Auth, Admin, Get);
  *                identity_type:
  *                  type: string
  *                identity_number:
- *                  type: string
+ *                  type: integer
  *                address:
  *                  type: string
  *     responses:
@@ -187,7 +187,7 @@ router.delete("/admin/", Auth, Admin, CheckDelete, Delete);
  *         required: false
  *         description: The identity_number of user
  *         schema:
- *           type: string
+ *           type: integer
  *       - in: query
  *         name: address
  *         required: false
@@ -217,7 +217,7 @@ router.get("/admin/get-user/", Auth, Admin, CheckGetAllUser, GetUser);
  *         required: true
  *         description: The id of user
  *         schema:
- *           type: string
+ *           type: integer
  *     requestBody:
  *        required: true
  *        content:
@@ -237,7 +237,7 @@ router.get("/admin/get-user/", Auth, Admin, CheckGetAllUser, GetUser);
  *                identity_type:
  *                  type: string
  *                identity_number:
- *                  type: string
+ *                  type: integer
  *                address:
  *                  type: string
  *     responses:
@@ -270,7 +270,7 @@ router.put(
  *         required: true
  *         description: The id of user
  *         schema:
- *           type: string
+ *           type: integer
  *     responses:
  *       200:
  *         description: Successful response

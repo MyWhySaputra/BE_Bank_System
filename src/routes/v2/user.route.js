@@ -41,7 +41,7 @@ const multer = require("multer")();
  *                identity_type:
  *                  type: string
  *                identity_number:
- *                  type: string
+ *                  type: integer
  *                address:
  *                  type: string
  *     responses:
@@ -104,7 +104,7 @@ router.get("/users/", Auth, Get);
  *                identity_type:
  *                  type: string
  *                identity_number:
- *                  type: string
+ *                  type: integer
  *                address:
  *                  type: string
  *     responses:

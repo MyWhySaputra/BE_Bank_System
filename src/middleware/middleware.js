@@ -89,7 +89,7 @@ function CheckRegister(req, res, next) {
         email: Joi.string().email().required(),
         password: Joi.string().min(6).required(),
         identity_type: Joi.string().required(),
-        identity_number: Joi.string().min(14).required(),
+        identity_number: Joi.number().min(14).required(),
         address: Joi.string().required(),
     });
 
@@ -113,7 +113,7 @@ function CheckUpdate(req, res, next) {
         email: Joi.string().email(),
         password: Joi.string().min(6),
         identity_type: Joi.string(),
-        identity_number: Joi.string().min(14),
+        identity_number: Joi.number().min(14),
         address: Joi.string(),
     });
 
@@ -157,7 +157,7 @@ function CheckGetAllUser(req, res, next) {
         name: Joi.string().max(255),
         email: Joi.string().email(),
         identity_type: Joi.string(),
-        identity_number: Joi.string().min(14),
+        identity_number: Joi.number().min(14),
         address: Joi.string(),
     });
 
@@ -181,7 +181,7 @@ function CheckUpdateUser(req, res, next) {
         email: Joi.string().email(),
         password: Joi.string().min(6),
         identity_type: Joi.string(),
-        identity_number: Joi.string().min(14),
+        identity_number: Joi.number().min(14),
         address: Joi.string(),
     });
 
@@ -201,10 +201,10 @@ function CheckUpdateUser(req, res, next) {
 
 function CheckBankAccountInsertAdmin(req, res, next) {
     const schema = Joi.object({
-        user_id: Joi.string().required(),
+        user_id: Joi.number().required(),
         bank_name: Joi.string().required(),
-        bank_account_number: Joi.string().required(),
-        balance: Joi.string().required(),
+        bank_account_number: Joi.number().required(),
+        balance: Joi.number().required(),
     });
 
     const { error } = schema.validate(req.body);
@@ -223,10 +223,10 @@ function CheckBankAccountInsertAdmin(req, res, next) {
 
 function CheckBankAccountGetAdmin(req, res, next) {
     const schema = Joi.object({
-        user_id: Joi.string(),
+        user_id: Joi.number(),
         bank_name: Joi.string(),
-        bank_account_number: Joi.string(),
-        balance: Joi.string(),
+        bank_account_number: Joi.number(),
+        balance: Joi.number(),
     });
 
     const { error } = schema.validate(req.query);
@@ -245,10 +245,10 @@ function CheckBankAccountGetAdmin(req, res, next) {
 
 function CheckBankAccountUpdateAdmin(req, res, next) {
     const schema = Joi.object({
-        user_id: Joi.string(),
+        user_id: Joi.number(),
         bank_name: Joi.string(),
-        bank_account_number: Joi.string(),
-        balance: Joi.string(),
+        bank_account_number: Joi.number(),
+        balance: Joi.number(),
     });
 
     const { error } = schema.validate(req.body);
@@ -268,8 +268,8 @@ function CheckBankAccountUpdateAdmin(req, res, next) {
 function CheckBankAccountInsert(req, res, next) {
     const schema = Joi.object({
         bank_name: Joi.string().required(),
-        bank_account_number: Joi.string().required(),
-        balance: Joi.string().required(),
+        bank_account_number: Joi.number().required(),
+        balance: Joi.number().required(),
     });
 
     const { error } = schema.validate(req.body);
@@ -289,8 +289,8 @@ function CheckBankAccountInsert(req, res, next) {
 function CheckBankAccountGet(req, res, next) {
     const schema = Joi.object({
         bank_name: Joi.string(),
-        bank_account_number: Joi.string(),
-        balance: Joi.string(),
+        bank_account_number: Joi.number(),
+        balance: Joi.number(),
     });
 
     const { error } = schema.validate(req.query);
@@ -310,8 +310,8 @@ function CheckBankAccountGet(req, res, next) {
 function CheckBankAccountUpdate(req, res, next) {
     const schema = Joi.object({
         bank_name: Joi.string(),
-        bank_account_number: Joi.string(),
-        balance: Joi.string(),
+        bank_account_number: Joi.number(),
+        balance: Joi.number(),
     });
 
     const { error } = schema.validate(req.body);
@@ -330,9 +330,9 @@ function CheckBankAccountUpdate(req, res, next) {
 
 function CheckTransactionInsert(req, res, next) {
     const schema = Joi.object({
-        source_bank_number: Joi.string().required(),
-        destination_bank_number: Joi.string().required(),
-        amount: Joi.string().required(),
+        source_bank_number: Joi.number().required(),
+        destination_bank_number: Joi.number().required(),
+        amount: Joi.number().required(),
     });
 
     const { error } = schema.validate(req.body);
@@ -351,8 +351,8 @@ function CheckTransactionInsert(req, res, next) {
 
 function CheckTransactionGet(req, res, next) {
     const schema = Joi.object({
-        source_bank_number: Joi.string(),
-        destination_bank_number: Joi.string(),
+        source_bank_number: Joi.number(),
+        destination_bank_number: Joi.number(),
     });
 
     const { error } = schema.validate(req.query);
@@ -371,9 +371,9 @@ function CheckTransactionGet(req, res, next) {
 
 function CheckTransactionGetAdmin(req, res, next) {
     const schema = Joi.object({
-        source_bank_number: Joi.string(),
-        destination_bank_number: Joi.string(),
-        amount: Joi.string(),
+        source_bank_number: Joi.number(),
+        destination_bank_number: Joi.number(),
+        amount: Joi.number(),
     });
 
     const { error } = schema.validate(req.query);
@@ -392,9 +392,9 @@ function CheckTransactionGetAdmin(req, res, next) {
 
 function CheckTransactionUpdateAdmin(req, res, next) {
     const schema = Joi.object({
-        source_bank_number: Joi.string(),
-        destination_bank_number: Joi.string(),
-        amount: Joi.string(),
+        source_bank_number: Joi.number(),
+        destination_bank_number: Joi.number(),
+        amount: Joi.number(),
     });
 
     const { error } = schema.validate(req.body);
@@ -430,4 +430,5 @@ module.exports = {
     CheckTransactionInsert,
     CheckTransactionGet,
     CheckTransactionGetAdmin,
+    CheckTransactionUpdateAdmin,
 };

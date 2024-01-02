@@ -30,11 +30,11 @@ const {
  *              type: object
  *              properties:
  *                source_account_id:
- *                  type: string
+ *                  type: integer
  *                destination_account_id:
- *                  type: string
+ *                  type: integer
  *                amount:
- *                  type: string
+ *                  type: integer
  *     responses:
  *       200:
  *         description: Successful response
@@ -56,13 +56,13 @@ router.post("/transactions/", Auth, CheckTransactionInsert, Insert);
  *         required: false
  *         description: The ID of source_account
  *         schema:
- *           type: string
+ *           type: integer
  *       - in: query
  *         name: destination_bank_number
  *         required: false
  *         description: The ID of destination_account
  *         schema:
- *           type: string
+ *           type: integer
  *     responses:
  *       200:
  *         description: Successful response
@@ -84,19 +84,19 @@ router.get("/transactions/", Auth, CheckTransactionGet, Get);
  *         required: false
  *         description: The ID of source_account
  *         schema:
- *           type: string
+ *           type: integer
  *       - in: query
  *         name: destination_bank_number
  *         required: false
  *         description: The ID of destination_account
  *         schema:
- *           type: string
+ *           type: integer
  *       - in: query
  *         name: amount
  *         required: false
  *         description: The amount of bank account
  *         schema:
- *           type: string
+ *           type: integer
  *     responses:
  *       200:
  *         description: Successful response
@@ -118,7 +118,7 @@ router.get("/transactions/admin/", Auth, Admin, CheckTransactionGet, AdminGet);
  *         required: true
  *         description: The ID of transaction
  *         schema:
- *           type: string
+ *           type: integer
  *     requestBody:
  *        required: true
  *        content:
@@ -127,11 +127,11 @@ router.get("/transactions/admin/", Auth, Admin, CheckTransactionGet, AdminGet);
  *              type: object
  *              properties:
  *                source_bank_number:
- *                  type: string
+ *                  type: integer
  *                destination_bank_number:
- *                  type: string
+ *                  type: integer
  *                amount:
- *                  type: string
+ *                  type: integer
  *     responses:
  *       200:
  *         description: Successful response

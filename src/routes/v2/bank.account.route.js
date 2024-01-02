@@ -38,13 +38,13 @@ const {
  *              type: object
  *              properties:
  *                user_id:
- *                  type: string
+ *                  type: integer
  *                bank_name:
  *                  type: string
  *                bank_account_number:
- *                  type: string
+ *                  type: integer
  *                balance:
- *                  type: string
+ *                  type: integer
  *     responses:
  *       200:
  *         description: Successful response
@@ -76,7 +76,7 @@ router.post(
  *         required: false
  *         description: The ID of user
  *         schema:
- *           type: string
+ *           type: integer
  *       - in: query
  *         name: bank_name
  *         required: false
@@ -88,13 +88,13 @@ router.post(
  *         required: false
  *         description: The bank_account_number of bank account
  *         schema:
- *           type: string
+ *           type: integer
  *       - in: query
  *         name: balance
  *         required: false
  *         description: The balance of bank account
  *         schema:
- *           type: string
+ *           type: integer
  *     responses:
  *       200:
  *         description: Successful response
@@ -124,7 +124,7 @@ router.get(
  *         required: true
  *         description: The ID of the user
  *         schema:
- *           type: string
+ *           type: integer
  *     requestBody:
  *        required: true
  *        content:
@@ -133,13 +133,13 @@ router.get(
  *              type: object
  *              properties:
  *                user_id:
- *                  type: string
+ *                  type: integer
  *                bank_name:
  *                  type: string
  *                bank_account_number:
- *                  type: string
+ *                  type: integer
  *                balance:
- *                  type: string
+ *                  type: integer
  *     responses:
  *       200:
  *         description: Successful response
@@ -169,7 +169,7 @@ router.put(
  *         required: true
  *         description: The bank_account_number of the bank account
  *         schema:
- *           type: string
+ *           type: integer
  *     responses:
  *       200:
  *         description: Successful response
@@ -202,9 +202,9 @@ router.delete(
  *                bank_name:
  *                  type: string
  *                bank_account_number:
- *                  type: string
+ *                  type: integer
  *                balance:
- *                  type: string
+ *                  type: integer
  *     responses:
  *       200:
  *         description: Successful response
@@ -236,13 +236,13 @@ router.post("/bank_accounts/", Auth, CheckBankAccountInsert, Insert);
  *         required: false
  *         description: The bank_account_number of bank account
  *         schema:
- *           type: string
+ *           type: integer
  *       - in: query
  *         name: balance
  *         required: false
  *         description: The balance of bank account
  *         schema:
- *           type: string
+ *           type: integer
  *     responses:
  *       200:
  *         description: Successful response
@@ -266,7 +266,7 @@ router.get("/bank_accounts/", Auth, CheckBankAccountGet, Get);
  *         required: true
  *         description: The ID of the user
  *         schema:
- *           type: string
+ *           type: integer
  *     requestBody:
  *        required: true
  *        content:
@@ -277,9 +277,9 @@ router.get("/bank_accounts/", Auth, CheckBankAccountGet, Get);
  *                bank_name:
  *                  type: string
  *                bank_account_number:
- *                  type: string
+ *                  type: integer
  *                balance:
- *                  type: string
+ *                  type: integer
  *     responses:
  *       200:
  *         description: Successful response
