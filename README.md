@@ -1,93 +1,95 @@
 ## Deploy in Railway
 
--   Auth
+- Auth
 
-        ### register account
+  ### login
 
-        - [x] POST https://cdp-mock-test-production-ddce.up.railway.app/api/v1/auth/register
-              Contoh:
-              {
-              "name": "nama",
-              "email": "email@mail.com",
-              "username": "nama22",
-              "password": "password231",
-              "pin": "123456"
-              }
+  - [x] POST https://bank-system-poxzy.koyeb.app/api/v2/auth/login
+        Contoh:
+        {
+        "email": "string",
+        "password": "string"
+        }
 
-        ### login
+  ### forget password
 
-        - [x] POST https://cdp-mock-test-production-ddce.up.railway.app/api/v1/auth/login
-              Contoh:
-              {
-              "emailOrUsername": "email@mail.com",
-              "pin": "123456"
-              }
+  - [x] POST https://bank-system-poxzy.koyeb.app/api/v2/auth/forget-password
+        Contoh:
+        {
+        "email": "string"
+        }
 
-        ### reset pin
+- Admin
 
-        - [x] PUT https://cdp-mock-test-production-ddce.up.railway.app/api/v1/auth/forget-pin
-              Contoh:
-              {
-              "emailOrUsername": "email@mail.com",
-              "password": "password231",
-              "newPin": "123456"
-              }
+  ### Register Admin
 
-        ### forget password
+  - [x] POST https://bank-system-poxzy.koyeb.app/api/v2/admin
 
-        - [x] POST https://cdp-mock-test-production-ddce.up.railway.app/api/v1/auth/forget-password
-              Contoh:
-              {
-              "emailOrUsername": "email@mail.com"
-              }
+  ### Get 1 admin
 
-        ### reset password
+  - [x] GET https://bank-system-poxzy.koyeb.app/api/v2/admin
 
-        - [x] PUT https://cdp-mock-test-production-ddce.up.railway.app/api/v1/auth/reset-password
-              Contoh:
-              {
-              "token": "string",
-              "newPassword": "passnew22"
-              }
+  ### Update 1 admin
 
--   User
+  - [x] PUT https://bank-system-poxzy.koyeb.app/api/v2/admin
 
-        ### Create task
+  ### Delete 1 admin
 
-        - [x] POST https://cdp-mock-test-production-ddce.up.railway.app/api/v1/user/create
-              Contoh:
-              {
-              "title": "title"
-              }
+  - [x] DELETE https://bank-system-poxzy.koyeb.app/api/v2/admin
+        {
+        "email": "string"
+        }
 
-        ### Get task
+  ### Get all user
 
-        - [x] GET https://cdp-mock-test-production-ddce.up.railway.app/api/v1/user
+  - [x] GET https://bank-system-poxzy.koyeb.app/api/v2/admin/get-user
 
-        ### UpdateTitle
+  ### Update 1 user
 
-        - [x] PUT https://cdp-mock-test-production-ddce.up.railway.app/api/v1/user/updateTitle
-              Contoh:
-              {
-              "title": "title",
-              "id": 1
-              }
+  - [x] PUT https://bank-system-poxzy.koyeb.app/api/v2/admin/update-user/:id
 
-        ### UpdateStatus
+  ### Delete 1 user
 
-        - [x] PUT https://cdp-mock-test-production-ddce.up.railway.app/api/v1/user/updateStatus
-              Contoh:
-              {
-              "id": 1
-              }
+  - [x] DELETE https://bank-system-poxzy.koyeb.app/api/v2/admin/delete-user/:id
 
-        ### Delete
+- User
 
-        - [x] DELETE https://cdp-mock-test-production-ddce.up.railway.app/api/v1/user/delete
-              Contoh:
-              {
-              "id": 1
-              }
+      ### Create task
+
+      - [x] POST https://cdp-mock-test-production-ddce.up.railway.app/api/v1/user/create
+            Contoh:
+            {
+            "title": "title"
+            }
+
+      ### Get task
+
+      - [x] GET https://cdp-mock-test-production-ddce.up.railway.app/api/v1/user
+
+      ### UpdateTitle
+
+      - [x] PUT https://cdp-mock-test-production-ddce.up.railway.app/api/v1/user/updateTitle
+            Contoh:
+            {
+            "title": "title",
+            "id": 1
+            }
+
+      ### UpdateStatus
+
+      - [x] PUT https://cdp-mock-test-production-ddce.up.railway.app/api/v1/user/updateStatus
+            Contoh:
+            {
+            "id": 1
+            }
+
+      ### Delete
+
+      - [x] DELETE https://cdp-mock-test-production-ddce.up.railway.app/api/v1/user/delete
+            Contoh:
+            {
+            "id": 1
+            }
 
 # Dokumentasi Swagger
 
