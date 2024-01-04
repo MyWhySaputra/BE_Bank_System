@@ -1,4 +1,4 @@
-## Deploy in Railway
+## Deploy in Koyeb
 
 - Auth
 
@@ -91,6 +91,6 @@
             "id": 1
             }
 
-# Dokumentasi Swagger
+# Dokumentasi in koyeb
 
 https://bank-system-poxzy.koyeb.app/
