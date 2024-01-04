@@ -2,55 +2,55 @@
 
 - Auth
 
-  ### login
+      ### login
 
-  - [x] POST https://bank-system-poxzy.koyeb.app/api/v2/auth/login
-        Contoh:
-        {
-        "email": "string",
-        "password": "string"
-        }
+      - [x] POST https://bank-system-poxzy.koyeb.app/api/v2/auth/login
+            Contoh:
+            {
+            "email": "string",
+            "password": "string"
+            }
 
-  ### forget password
+      ### forget password
 
-  - [x] POST https://bank-system-poxzy.koyeb.app/api/v2/auth/forget-password
-        Contoh:
-        {
-        "email": "string"
-        }
+      - [x] POST https://bank-system-poxzy.koyeb.app/api/v2/auth/forget-password
+            Contoh:
+            {
+            "email": "string"
+            }
 
 - Admin
 
-  ### Register Admin
+      ### Register Admin
 
-  - [x] POST https://bank-system-poxzy.koyeb.app/api/v2/admin
+      - [x] POST https://bank-system-poxzy.koyeb.app/api/v2/admin
 
-  ### Get 1 admin
+      ### Get 1 admin
 
-  - [x] GET https://bank-system-poxzy.koyeb.app/api/v2/admin
+      - [x] GET https://bank-system-poxzy.koyeb.app/api/v2/admin
 
-  ### Update 1 admin
+      ### Update 1 admin
 
-  - [x] PUT https://bank-system-poxzy.koyeb.app/api/v2/admin
+      - [x] PUT https://bank-system-poxzy.koyeb.app/api/v2/admin
 
-  ### Delete 1 admin
+      ### Delete 1 admin
 
-  - [x] DELETE https://bank-system-poxzy.koyeb.app/api/v2/admin
-        {
-        "email": "string"
-        }
+      - [x] DELETE https://bank-system-poxzy.koyeb.app/api/v2/admin
+            {
+            "email": "string"
+            }
 
-  ### Get all user
+      ### Get all user
 
-  - [x] GET https://bank-system-poxzy.koyeb.app/api/v2/admin/get-user
+      - [x] GET https://bank-system-poxzy.koyeb.app/api/v2/admin/get-user
 
-  ### Update 1 user
+      ### Update 1 user
 
-  - [x] PUT https://bank-system-poxzy.koyeb.app/api/v2/admin/update-user/:id
+      - [x] PUT https://bank-system-poxzy.koyeb.app/api/v2/admin/update-user/:id
 
-  ### Delete 1 user
+      ### Delete 1 user
 
-  - [x] DELETE https://bank-system-poxzy.koyeb.app/api/v2/admin/delete-user/:id
+      - [x] DELETE https://bank-system-poxzy.koyeb.app/api/v2/admin/delete-user/:id
 
 - User
 
