@@ -36,6 +36,7 @@
       ### Delete 1 admin
 
       - [x] DELETE https://bank-system-poxzy.koyeb.app/api/v2/admin
+            Contoh:
             {
             "email": "string"
             }
@@ -54,41 +55,114 @@
 
 - User
 
-      ### Create task
+      ### Register user
 
-      - [x] POST https://cdp-mock-test-production-ddce.up.railway.app/api/v1/user/create
+      - [x] POST https://bank-system-poxzy.koyeb.app/api/v2/user
+
+      ### Get 1 user
+
+      - [x] GET https://bank-system-poxzy.koyeb.app/api/v2/user
+
+      ### Update 1 user
+
+      - [x] PUT https://bank-system-poxzy.koyeb.app/api/v2/user
+
+      ### Delete 1 user
+
+      - [x] DELETE https://bank-system-poxzy.koyeb.app/api/v2/user
             Contoh:
             {
-            "title": "title"
+            "email": "string"
             }
 
-      ### Get task
+- Bank Account
 
-      - [x] GET https://cdp-mock-test-production-ddce.up.railway.app/api/v1/user
+        ### Register bank account (Admin Only)
 
-      ### UpdateTitle
-
-      - [x] PUT https://cdp-mock-test-production-ddce.up.railway.app/api/v1/user/updateTitle
+        - [x] POST https://bank-system-poxzy.koyeb.app/api/v2/bank_accounts/admin
             Contoh:
             {
-            "title": "title",
-            "id": 1
+            "user_id": 0,
+            "bank_name": "string",
+            "bank_account_number": 0,
+            "balance": 0
             }
 
-      ### UpdateStatus
+        ### Get all bank account (Admin Only)
 
-      - [x] PUT https://cdp-mock-test-production-ddce.up.railway.app/api/v1/user/updateStatus
+        - [x] GET https://bank-system-poxzy.koyeb.app/api/v2/bank_accounts/admin
+
+        ### Update bank account (Admin Only)
+
+        - [x] PUT https://bank-system-poxzy.koyeb.app/api/v2/bank_accounts/admin/:id
             Contoh:
             {
-            "id": 1
+            "user_id": 0,
+            "bank_name": "string",
+            "bank_account_number": 0,
+            "balance": 0
             }
 
-      ### Delete
+        ### Delete bank account (Admin Only)
 
-      - [x] DELETE https://cdp-mock-test-production-ddce.up.railway.app/api/v1/user/delete
+        - [x] DELETE https://bank-system-poxzy.koyeb.app/api/v2/bank_accounts/admin/:bank_account_number
+
+        ### Register bank account
+
+        - [x] POST https://bank-system-poxzy.koyeb.app/api/v2/bank_accounts
             Contoh:
             {
-            "id": 1
+            "bank_name": "string",
+            "bank_account_number": 0,
+            "balance": 0
+            }
+
+        ### Get all bank account (Admin Only)
+
+        - [x] GET https://bank-system-poxzy.koyeb.app/api/v2/bank_accounts
+
+        ### Update bank account (Admin Only)
+
+        - [x] PUT https://bank-system-poxzy.koyeb.app/api/v2/bank_accounts/:id
+            Contoh:
+            {
+            "bank_name": "string",
+            "bank_account_number": 0,
+            "balance": 0
+            }
+
+        ### Delete bank account (Admin Only)
+
+        - [x] DELETE https://bank-system-poxzy.koyeb.app/api/v2/bank_accounts/:bank_account_number
+
+- Transaction
+
+      ### Create Transaction
+
+      - [x] POST https://bank-system-poxzy.koyeb.app/api/v2/transactions
+            Contoh:
+            {
+            "source_account_id": 0,
+            "destination_account_id": 0,
+            "amount": 0
+            }
+
+      ### Get all transaction user
+
+      - [x] GET https://bank-system-poxzy.koyeb.app/api/v2/transactions
+
+      ### Get all transaction (Admin Only)
+
+      - [x] GET https://bank-system-poxzy.koyeb.app/api/v2/transactions/admin
+
+      ### Update transactin (Admin Only)
+
+      - [x] PUT https://bank-system-poxzy.koyeb.app/api/v2/transactions/admin/:id
+            Contoh:
+            {
+            "source_bank_number": 0,
+            "destination_bank_number": 0,
+            "amount": 0
             }
 
 # Dokumentasi in koyeb
