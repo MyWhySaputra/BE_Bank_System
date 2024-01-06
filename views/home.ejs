@@ -3,7 +3,7 @@
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Reverse 1999 Character List API</title>
+        <title>Bank System API</title>
         <link
             href="https://cdn.jsdelivr.net/npm/daisyui@4.4.24/dist/full.min.css"
             rel="stylesheet"
@@ -17,41 +17,38 @@
             <div class="max-w-md">
             <h1 class="text-5xl font-bold">Welcome!</h1>
             <p class="py-6">
-                This is a Reverse 1999 character list API (Fanmade). You can get a
-                list of characters.
+                This is a Bank System API. It's a simple REST API. You can use it to create, read, update, and delete.
             </p>
             <h2 class="text-2xl">Example</h2>
             <div class="mockup-code my-3">
                 <pre
                 data-prefix="1"
                 class="text-sm px-4 my-2"
-                ><code class="text-green-700">// Get All Character</code></pre>
+                ><code class="text-green-700">// Register Admin</code></pre>
                 <pre
                 data-prefix="2"
                 class="text-sm px-4 my-2"
-                ><code><span class="text-green-500">GET</span> /api/v1/characters</code></pre>
+                ><code><span class="text-green-500">POST</span> /api/v2/admin</code></pre>
                 <pre
                 data-prefix="3"
                 class="text-sm px-4 my-2"
-                ><code class="text-green-700">// Get By Slug</code></pre>
+                ><code class="text-green-700">// Register User</code></pre>
                 <pre
                 data-prefix="4"
                 class="text-sm px-4 my-2"
-                ><code><span class="text-green-500">GET</span> /api/v1/characters/a-knight</code></pre>
+                ><code><span class="text-green-500">POST</span> /api/v2/user</code></pre>
                 <pre
                 data-prefix="5"
                 class="text-sm px-4 my-2"
-                ><code class="text-green-700">// Pagination</code></pre>
+                ><code class="text-green-700">// Login</code></pre>
                 <pre
                 data-prefix="6"
                 class="text-sm px-4 my-2"
-                ><code><span class="text-green-500">GET</span> /api/v1/characters?page=</code></pre>
+                ><code><span class="text-green-500">POST</span> /api/v2/auth/login</code></pre>
             </div>
             <a href="/docs" target="_blank" class="btn btn-primary"
-                >Get Characters</a
-            >
-            <!-- <h3 class="mt-2 text-sm text-emerald-400">Pagination</h3>
-            <p class="mockup-code text-sm px-4 my-2">GET /api/v1/characters?page=</p> -->
+                >More Documentation
+            </a>
             </div>
         </div>
         </div>
