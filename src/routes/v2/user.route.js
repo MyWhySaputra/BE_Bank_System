@@ -54,8 +54,8 @@ const multer = require("multer")();
  */
 router.post(
     "/users/",
-    CheckRegister,
     multer.single("profile_picture"),
+    CheckRegister,
     Register
 );
 
@@ -116,8 +116,8 @@ router.get("/users/", Auth, Get);
 router.put(
     "/users/",
     Auth,
-    CheckUpdate,
     multer.single("profile_picture"),
+    CheckUpdate,
     Update
 );
 

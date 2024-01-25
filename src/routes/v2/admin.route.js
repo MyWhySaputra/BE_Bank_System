@@ -60,8 +60,8 @@ const multer = require("multer")();
  */
 router.post(
     "/admin/",
-    CheckRegister,
     multer.single("profile_picture"),
+    CheckRegister,
     Register
 );
 
@@ -123,8 +123,8 @@ router.put(
     "/admin/",
     Auth,
     Admin,
-    CheckUpdate,
     multer.single("profile_picture"),
+    CheckUpdate,
     Update
 );
 
@@ -250,8 +250,8 @@ router.put(
     "/admin/update-user/:id",
     Auth,
     Admin,
-    CheckUpdateUser,
     multer.single("profile_picture"),
+    CheckUpdateUser,
     UpdateUser
 );
 
