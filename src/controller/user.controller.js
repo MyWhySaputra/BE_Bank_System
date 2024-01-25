@@ -82,10 +82,10 @@ async function Register(req, res) {
                         identity_type: true,
                         identity_number: true,
                         address: true,
-                        created_at: true,
-                        updated_at: true
                     }
-                }
+                },
+                createAt: true,
+                updateAt: true,
             },
         });
 
@@ -119,10 +119,10 @@ async function Get(req, res) {
                         identity_type: true,
                         identity_number: true,
                         address: true,
-                        created_at: true,
-                        updated_at: true
                     }
-                }
+                },
+                createAt: true,
+                updateAt: true,
             }
         })
 
@@ -200,10 +200,10 @@ async function Update(req, res) {
                         identity_type: true,
                         identity_number: true,
                         address: true,
-                        created_at: true,
-                        updated_at: true
                     }
-                }
+                },
+                createAt: true,
+                updateAt: true,
             }
         })
 
