@@ -1,4 +1,28 @@
+# REST API Bank System
+
+## Install
+
+    npm install
+
+## Run the app
+
+    npm run dev
+
 ## Deploy in Koyeb
+
+    https://bank-system-poxzy.koyeb.app/
+
+## Documentation in swagger
+
+    https://bank-system-poxzy.koyeb.app/docs
+
+# ERD
+
+![Tux, the Linux](/ERD.png)
+
+# REST API
+
+This is a Banking system API. It's a simple REST API. You can use it to create, read, update, and delete.
 
 - Auth
 
