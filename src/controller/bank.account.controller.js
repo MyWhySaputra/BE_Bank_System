@@ -396,8 +396,8 @@ async function AdminGet(req, res) {
             },
           },
         },
-        created_at: true,
-        updated_at: true,
+        createAt: true,
+        updateAt: true,
       },
     });
 

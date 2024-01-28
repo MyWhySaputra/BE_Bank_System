@@ -9,7 +9,14 @@ async function Get(req, res) {
   const id = req.user.id;
 
   try {
-    const users = await prisma.user.findUnique({
+
+    const checkUser = await prisma.user.findUnique({
+      where: {
+        id: Number(id),
+      }
+    })
+
+    const usersView = await prisma.user.findUnique({
       where: {
         id: Number(id),
       },
@@ -30,13 +37,13 @@ async function Get(req, res) {
       },
     });
 
-    if (users === null || users.deletedAt !== null) {
+    if (checkUser === null || checkUser.deletedAt !== null) {
       let resp = ResponseTemplate(null, "data not found", null, 404);
       res.status(404).json(resp);
       return;
     }
 
-    let resp = ResponseTemplate(users, "success", null, 200);
+    let resp = ResponseTemplate(usersView, "success", null, 200);
     res.status(200).json(resp);
     return;
   } catch (error) {
@@ -175,6 +182,12 @@ async function Delete(req, res) {
     //   },
     // });
 
+    const checkUser = await prisma.user.findUnique({
+      where: {
+        id: Number(req.user.id),
+      }
+    })
+
     await prisma.profile.update({
       where: {
         user_id: Number(req.user.id),
@@ -192,7 +205,7 @@ async function Delete(req, res) {
         id: Number(req.user.id),
       },
       data: {
-        email: `${checkKasir.email}_${timestamp}_${random}`,
+        email: `${checkUser.email}_${timestamp}${random}`,
         deletedAt: new Date(),
       },
       select: {
@@ -466,7 +479,7 @@ async function DeleteUser(req, res) {
         id: Number(id),
       },
       data: {
-        email: `${checkKasir.email}_${timestamp}_${random}`,
+        email: `${checkUser.email}_${timestamp}${random}`,
         deletedAt: new Date(),
       },
       select: {

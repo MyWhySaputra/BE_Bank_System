@@ -12,9 +12,9 @@ swaggerOptions = {
   swaggerDefinition: {
     openapi: "3.0.0",
     info: {
-      title: "Node Bank System",
-      version: "1.0.0",
-      description: "Build Bank System with NodeJS and ExpressJS",
+      title: "REST API Bank System",
+      version: "2.0.0",
+      description: " REST API Bank System Documentation",
     },
     servers: [
       {

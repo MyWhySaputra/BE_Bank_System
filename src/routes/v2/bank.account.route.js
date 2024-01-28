@@ -240,7 +240,7 @@ router.get("/bank_accounts/admin/", Auth, Admin, midd_bank_accountAdminGet, Admi
  *       - in: path
  *         name: id
  *         required: true
- *         description: The ID of the user
+ *         description: The ID of bank account
  *         schema:
  *           type: integer
  *     requestBody:
