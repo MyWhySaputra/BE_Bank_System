@@ -1,18 +1,20 @@
 const express = require("express");
 const router = express.Router();
 const {
-    Insert,
-    Get,
-    AdminGet,
-    AdminUpdate,
+  Insert,
+  Get,
+  AdminGet,
+  AdminUpdate,
+  AdminDelete,
 } = require("../../controller/transaction.controller");
 const {
-    Auth,
-    Admin,
-    CheckTransactionInsert,
-    CheckTransactionGet,
-    CheckBankAccountGetAdmin,
-    CheckTransactionUpdateAdmin,
+  Auth,
+  Admin,
+  midd_id,
+  midd_trasactionInsert,
+  midd_trasactionGet,
+  midd_trasactionAdminGet,
+  midd_trasactionAdminUpdate,
 } = require("../../middleware/middleware");
 
 /**
@@ -23,7 +25,7 @@ const {
  *      - bearerAuth: []
  *     tags:
  *      - "Transaction"
- *     summary: example to create transaction
+ *     summary: Create transaction
  *     requestBody:
  *        required: true
  *        content:
@@ -31,17 +33,17 @@ const {
  *            schema:
  *              type: object
  *              properties:
- *                source_account_id:
- *                  type: integer
- *                destination_account_id:
- *                  type: integer
+ *                source_bank_number:
+ *                  type: string
+ *                destination_bank_number:
+ *                  type: string
  *                amount:
  *                  type: integer
  *     responses:
  *       200:
  *         description: Successful response
  */
-router.post("/transactions/", Auth, CheckTransactionInsert, Insert);
+router.post("/transactions/", Auth, midd_trasactionInsert, Insert);
 
 /**
  * @swagger
@@ -58,18 +60,18 @@ router.post("/transactions/", Auth, CheckTransactionInsert, Insert);
  *         required: false
  *         description: The ID of source_account
  *         schema:
- *           type: integer
+ *           type: string
  *       - in: query
  *         name: destination_bank_number
  *         required: false
  *         description: The ID of destination_account
  *         schema:
- *           type: integer
+ *           type: string
  *     responses:
  *       200:
  *         description: Successful response
  */
-router.get("/transactions/", Auth, CheckTransactionGet, Get);
+router.get("/transactions/", Auth, midd_trasactionGet, Get);
 
 /**
  * @swagger
@@ -86,13 +88,13 @@ router.get("/transactions/", Auth, CheckTransactionGet, Get);
  *         required: false
  *         description: The ID of source_account
  *         schema:
- *           type: integer
+ *           type: string
  *       - in: query
  *         name: destination_bank_number
  *         required: false
  *         description: The ID of destination_account
  *         schema:
- *           type: integer
+ *           type: string
  *       - in: query
  *         name: amount
  *         required: false
@@ -103,11 +105,11 @@ router.get("/transactions/", Auth, CheckTransactionGet, Get);
  *       200:
  *         description: Successful response
  */
-router.get("/transactions/admin/", Auth, Admin, CheckBankAccountGetAdmin, AdminGet);
+router.get("/transactions/admin/", Auth, Admin, midd_trasactionAdminGet, AdminGet);
 
 /**
  * @swagger
- * /api/v2/transactions/admin:
+ * /api/v2/transactions/admin/{id}:
  *   put:
  *     security:
  *      - bearerAuth: []
@@ -129,15 +131,37 @@ router.get("/transactions/admin/", Auth, Admin, CheckBankAccountGetAdmin, AdminG
  *              type: object
  *              properties:
  *                source_bank_number:
- *                  type: integer
+ *                  type: string
  *                destination_bank_number:
- *                  type: integer
+ *                  type: string
  *                amount:
  *                  type: integer
  *     responses:
  *       200:
  *         description: Successful response
  */
-router.put("/transactions/admin/:id", Auth, Admin, CheckTransactionUpdateAdmin, AdminUpdate);
+router.put("/transactions/admin/:id", Auth, Admin, midd_id, midd_trasactionAdminUpdate, AdminUpdate);
+
+/**
+ * @swagger
+ * /api/v2/transactions/admin/{id}:
+ *   delete:
+ *     security:
+ *      - bearerAuth: []
+ *     tags:
+ *      - "Transaction"
+ *     summary: Delete transactions (ADMIN ONLY with soft delete)
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         description: The ID of transaction
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       200:
+ *         description: Successful response
+ */
+router.delete("/transactions/admin/:id", Auth, Admin, midd_id, AdminDelete);
 
 module.exports = router;

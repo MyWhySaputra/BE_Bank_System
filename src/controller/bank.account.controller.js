@@ -214,43 +214,43 @@ async function Delete(req, res) {
       return;
     }
 
-    const source = await prisma.transactions.findUnique({
-      where: {
-        source_bank_number: CheckBankAccount.bank_account_number,
-      },
-    });
+    // const source = await prisma.transactions.findUnique({
+    //   where: {
+    //     source_bank_number: CheckBankAccount.bank_account_number,
+    //   },
+    // });
 
-    const destination = await prisma.transactions.findUnique({
-      where: {
-        destination_bank_number: CheckBankAccount.bank_account_number,
-      },
-    });
+    // const destination = await prisma.transactions.findUnique({
+    //   where: {
+    //     destination_bank_number: CheckBankAccount.bank_account_number,
+    //   },
+    // });
 
-    if (source) {
-      await prisma.transactions.updateMany({
-        where: {
-          source_bank_number: CheckBankAccount.bank_account_number,
-          deletedAt: null,
-        },
-        data: {
-          deletedAt: new Date(),
-        }
-      });
-      return;
-    }
+    // if (source) {
+    //   await prisma.transactions.updateMany({
+    //     where: {
+    //       source_bank_number: CheckBankAccount.bank_account_number,
+    //       deletedAt: null,
+    //     },
+    //     data: {
+    //       deletedAt: new Date(),
+    //     }
+    //   });
+    //   return;
+    // }
 
-    if (destination) {
-      await prisma.transactions.updateMany({
-        where: {
-          destination_bank_number: CheckBankAccount.bank_account_number,
-          deletedAt: null,
-        },
-        data: {
-          deletedAt: new Date(),
-        }
-      });
-      return;
-    }
+    // if (destination) {
+    //   await prisma.transactions.updateMany({
+    //     where: {
+    //       destination_bank_number: CheckBankAccount.bank_account_number,
+    //       deletedAt: null,
+    //     },
+    //     data: {
+    //       deletedAt: new Date(),
+    //     }
+    //   });
+    //   return;
+    // }
 
     const bankAccount = await prisma.bankAccounts.update({
       where: {
@@ -500,43 +500,43 @@ async function AdminDelete(req, res) {
       return;
     }
 
-    const source = await prisma.transactions.findUnique({
-      where: {
-        source_bank_number: CheckBankAccount.bank_account_number,
-      },
-    });
+    // const source = await prisma.transactions.findUnique({
+    //   where: {
+    //     source_bank_number: CheckBankAccount.bank_account_number,
+    //   },
+    // });
 
-    const destination = await prisma.transactions.findUnique({
-      where: {
-        destination_bank_number: CheckBankAccount.bank_account_number,
-      },
-    });
+    // const destination = await prisma.transactions.findUnique({
+    //   where: {
+    //     destination_bank_number: CheckBankAccount.bank_account_number,
+    //   },
+    // });
 
-    if (source) {
-      await prisma.transactions.update({
-        where: {
-          source_bank_number: CheckBankAccount.bank_account_number,
-          deletedAt: null,
-        },
-        data: {
-          deletedAt: new Date(),
-        }
-      });
-      return;
-    }
+    // if (source) {
+    //   await prisma.transactions.update({
+    //     where: {
+    //       source_bank_number: CheckBankAccount.bank_account_number,
+    //       deletedAt: null,
+    //     },
+    //     data: {
+    //       deletedAt: new Date(),
+    //     }
+    //   });
+    //   return;
+    // }
 
-    if (destination) {
-      await prisma.transactions.update({
-        where: {
-          destination_bank_number: CheckBankAccount.bank_account_number,
-          deletedAt: null,
-        },
-        data: {
-          deletedAt: new Date(),
-        }
-      });
-      return;
-    }
+    // if (destination) {
+    //   await prisma.transactions.update({
+    //     where: {
+    //       destination_bank_number: CheckBankAccount.bank_account_number,
+    //       deletedAt: null,
+    //     },
+    //     data: {
+    //       deletedAt: new Date(),
+    //     }
+    //   });
+    //   return;
+    // }
 
     const bankAccount = await prisma.bankAccounts.update({
       where: {

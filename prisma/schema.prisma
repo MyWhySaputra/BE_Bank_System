@@ -46,7 +46,7 @@ model bankAccounts {
   id                  Int       @id @default(autoincrement())
   user_id             Int       
   bank_name           String    @db.VarChar(100)
-  bank_account_number Int       @db.Integer @unique
+  bank_account_number String    @db.VarChar(100) @unique
   balance             Int       @db.Integer
   createAt            DateTime  @default(now())
   updateAt            DateTime  @updatedAt
@@ -58,8 +58,8 @@ model bankAccounts {
 
 model transactions {
   id                      Int       @id @default(autoincrement())
-  source_bank_number      Int       @db.Integer
-  destination_bank_number Int       @db.Integer
+  source_bank_number      String    @db.VarChar(100)
+  destination_bank_number String    @db.VarChar(100)
   amount                  Int       @db.Integer
   createAt                DateTime  @default(now())
   updateAt                DateTime  @updatedAt

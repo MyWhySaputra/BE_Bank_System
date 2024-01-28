@@ -1,7 +1,50 @@
 const express = require('express')
 const router = express.Router()
-const { login, verifyEmail, forgetPassword, resetPassword } = require('../../controller/auth.controller')
-const { CheckLogin, CheckForgot } = require('../../middleware/middleware')
+const { login, register, verifyEmail, forgetPassword, resetPassword } = require('../../controller/auth.controller')
+const { midd_register, midd_login, midd_forget } = require('../../middleware/middleware')
+
+const multer = require("multer")();
+
+/**
+ * @swagger
+ * /api/v2/auth/register:
+ *   post:
+ *     tags:
+ *      - "Auth"
+ *     summary: example to register user/admin
+ *     requestBody:
+ *        required: true
+ *        content:
+ *          multipart/form-data:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                name:
+ *                  type: string
+ *                email:
+ *                  type: string
+ *                password:
+ *                  type: string
+ *                role:
+ *                  type: string
+ *                profile_picture:
+ *                  type: string
+ *                  format: binary
+ *                identity_type:
+ *                  type: string
+ *                identity_number:
+ *                  type: string
+ *                address:
+ *                  type: string
+ *     responses:
+ *       200:
+ *         description: Successful response
+ *       404:
+ *         description: Not found
+ *       500:
+ *         description: Internal server error
+ */
+router.post("/auth/register", multer.single("profile_picture"), midd_register, register);
 
 /**
  * @swagger
@@ -27,7 +70,7 @@ const { CheckLogin, CheckForgot } = require('../../middleware/middleware')
  *       400:
  *         description: Bad request
  */
-router.post('/auth/login', CheckLogin, login)
+router.post('/auth/login', midd_login, login)
 
 router.get('/auth/verify-email', verifyEmail)
 
@@ -53,7 +96,7 @@ router.get('/auth/verify-email', verifyEmail)
  *       400:
  *         description: Bad request
  */
-router.post('/auth/forget-password', CheckForgot, forgetPassword)
+router.post('/auth/forget-password', midd_forget, forgetPassword)
 
 router.get("/auth/reset-password", (req, res) => {
     const token = req.query.token

@@ -7,8 +7,8 @@ async function Insert(req, res) {
   const { source_bank_number, destination_bank_number, amount } = req.body;
 
   const payload = {
-    source_bank_number: parseInt(source_bank_number),
-    destination_bank_number: parseInt(destination_bank_number),
+    source_bank_number: source_bank_number,
+    destination_bank_number: destination_bank_number,
     amount: parseInt(amount),
   };
 
@@ -20,10 +20,16 @@ async function Insert(req, res) {
       where: { bank_account_number: payload.destination_bank_number },
     });
 
-    if (!source || !destination) {
+    if (!source) {
+      let resp = ResponseTemplate(null, "Source account not found", null, 404);
+      res.status(404).json(resp);
+      return;
+    }
+
+    if (!destination) {
       let resp = ResponseTemplate(
         null,
-        "Source or destination account not found",
+        "Destination account not found",
         null,
         404
       );
@@ -90,8 +96,9 @@ async function Insert(req, res) {
     res.status(200).json(resp);
     return;
   } catch (error) {
-    let resp = ResponseTemplate(null, "internal server error", error, 500);
-    res.status(500).json(resp);
+    // let resp = ResponseTemplate(null, "internal server error", error, 500);
+    // res.status(500).json(resp);
+    console.log(error);
     return;
   }
 }
@@ -108,10 +115,12 @@ async function Get(req, res) {
 
   const payload = {};
 
-  if (source_bank_number) payload.source_bank_number = source_bank_number;
+  if (source_bank_number)
+    payload.source_bank_number = parseInt(source_bank_number);
   if (destination_bank_number)
-    payload.destination_bank_number = destination_bank_number;
-  if (amount) payload.amount = amount;
+    payload.destination_bank_number = parseInt(destination_bank_number);
+
+  payload.deletedAt = null;
 
   try {
     const user = await prisma.bankAccounts.findMany({
@@ -237,6 +246,8 @@ async function AdminGet(req, res) {
     payload.destination_bank_number = destination_bank_number;
   if (amount) payload.amount = amount;
 
+  payload.deletedAt = null;
+
   try {
     let skip = (page - 1) * limit;
 
@@ -325,10 +336,388 @@ async function AdminUpdate(req, res) {
     return;
   }
 
-  if (source_bank_number) payload.source_bank_number = source_bank_number;
-  if (destination_bank_number)
+  const CheckTransaction = await prisma.transactions.findUnique({
+    where: {
+      id: Number(id),
+    },
+  });
+
+  if (CheckTransaction === null || CheckTransaction.deletedAt !== null) {
+    let resp = ResponseTemplate(null, "data not found", null, 404);
+    res.status(404).json(resp);
+    return;
+  }
+
+  const source = await prisma.bankAccounts.findUnique({
+    where: { bank_account_number: CheckTransaction.source_bank_number },
+  });
+  const destination = await prisma.bankAccounts.findUnique({
+    where: { bank_account_number: CheckTransaction.destination_bank_number },
+  });
+
+  if (destination.balance < CheckTransaction.amount) {
+    let resp = ResponseTemplate(
+      null,
+      "balance destination not enough",
+      null,
+      400
+    );
+    res.status(400).json(resp);
+    return;
+  }
+
+  if (source_bank_number && destination_bank_number && amount) {
+    payload.source_bank_number = source_bank_number;
     payload.destination_bank_number = destination_bank_number;
-  if (amount) payload.amount = amount;
+    payload.amount = Number(amount);
+
+    const sourceNew = await prisma.bankAccounts.findUnique({
+      where: { bank_account_number: payload.source_bank_number },
+    });
+    const destinationNew = await prisma.bankAccounts.findUnique({
+      where: { bank_account_number: payload.destination_bank_number },
+    });
+
+    if (!sourceNew) {
+      let resp = ResponseTemplate(
+        null,
+        "New source account not found",
+        null,
+        404
+      );
+      res.status(404).json(resp);
+      return;
+    }
+
+    if (!destinationNew) {
+      let resp = ResponseTemplate(
+        null,
+        "New destination account not found",
+        null,
+        404
+      );
+      res.status(404).json(resp);
+      return;
+    }
+
+    if (sourceNew.balance < payload.amount) {
+      let resp = ResponseTemplate(
+        null,
+        "balance new source not enough",
+        null,
+        400
+      );
+      res.status(400).json(resp);
+      return;
+    }
+
+    const sourceOld = await prisma.bankAccounts.update({
+      where: { bank_account_number: source.bank_account_number },
+      data: { balance: { increment: CheckTransaction.amount } },
+    });
+
+    const destinationOld = await prisma.bankAccounts.update({
+      where: { bank_account_number: destination.bank_account_number },
+      data: { balance: { decrement: CheckTransaction.amount } },
+    });
+
+    await prisma.bankAccounts.update({
+      where: { bank_account_number: sourceNew.bank_account_number },
+      data: { balance: { decrement: payload.amount } },
+    });
+
+    await prisma.bankAccounts.update({
+      where: { bank_account_number: destinationNew.bank_account_number },
+      data: { balance: { increment: payload.amount } },
+    });
+  } else if (destination_bank_number && amount) {
+    payload.destination_bank_number = destination_bank_number;
+    payload.amount = Number(amount);
+
+    const sourceNew = await prisma.bankAccounts.findUnique({
+      where: { bank_account_number: CheckTransaction.source_bank_number },
+    });
+    const destinationNew = await prisma.bankAccounts.findUnique({
+      where: { bank_account_number: payload.destination_bank_number },
+    });
+
+    if (!destinationNew) {
+      let resp = ResponseTemplate(
+        null,
+        "New destination account not found",
+        null,
+        404
+      );
+      res.status(404).json(resp);
+      return;
+    }
+
+    if (sourceNew.balance < payload.amount) {
+      let resp = ResponseTemplate(
+        null,
+        "balance new source not enough",
+        null,
+        400
+      );
+      res.status(400).json(resp);
+      return;
+    }
+
+    const sourceOld = await prisma.bankAccounts.update({
+      where: { bank_account_number: source.bank_account_number },
+      data: { balance: { increment: CheckTransaction.amount } },
+    });
+
+    const destinationOld = await prisma.bankAccounts.update({
+      where: { bank_account_number: destination.bank_account_number },
+      data: { balance: { decrement: CheckTransaction.amount } },
+    });
+
+    await prisma.bankAccounts.update({
+      where: { bank_account_number: sourceNew.bank_account_number },
+      data: { balance: { decrement: payload.amount } },
+    });
+
+    await prisma.bankAccounts.update({
+      where: { bank_account_number: destinationNew.bank_account_number },
+      data: { balance: { increment: payload.amount } },
+    });
+  } else if (source_bank_number && amount) {
+    payload.source_bank_number = source_bank_number;
+    payload.amount = Number(amount);
+
+    const sourceNew = await prisma.bankAccounts.findUnique({
+      where: { bank_account_number: payload.source_bank_number },
+    });
+    const destinationNew = await prisma.bankAccounts.findUnique({
+      where: { bank_account_number: CheckTransaction.destination_bank_number },
+    });
+
+    if (!sourceNew) {
+      let resp = ResponseTemplate(
+        null,
+        "New source account not found",
+        null,
+        404
+      );
+      res.status(404).json(resp);
+      return;
+    }
+
+    if (sourceNew.balance < payload.amount) {
+      let resp = ResponseTemplate(
+        null,
+        "balance new source not enough",
+        null,
+        400
+      );
+      res.status(400).json(resp);
+      return;
+    }
+
+    const sourceOld = await prisma.bankAccounts.update({
+      where: { bank_account_number: source.bank_account_number },
+      data: { balance: { increment: CheckTransaction.amount } },
+    });
+
+    const destinationOld = await prisma.bankAccounts.update({
+      where: { bank_account_number: destination.bank_account_number },
+      data: { balance: { decrement: CheckTransaction.amount } },
+    });
+
+    await prisma.bankAccounts.update({
+      where: { bank_account_number: sourceNew.bank_account_number },
+      data: { balance: { decrement: payload.amount } },
+    });
+
+    await prisma.bankAccounts.update({
+      where: { bank_account_number: destinationNew.bank_account_number },
+      data: { balance: { increment: payload.amount } },
+    });
+  } else if (source_bank_number && destination_bank_number) {
+    payload.source_bank_number = source_bank_number;
+    payload.destination_bank_number = destination_bank_number;
+
+    const sourceNew = await prisma.bankAccounts.findUnique({
+      where: { bank_account_number: payload.source_bank_number },
+    });
+    const destinationNew = await prisma.bankAccounts.findUnique({
+      where: { bank_account_number: payload.destination_bank_number },
+    });
+
+    if (!sourceNew) {
+      let resp = ResponseTemplate(
+        null,
+        "New source account not found",
+        null,
+        404
+      );
+      res.status(404).json(resp);
+      return;
+    }
+
+    if (!destinationNew) {
+      let resp = ResponseTemplate(
+        null,
+        "New destination account not found",
+        null,
+        404
+      );
+      res.status(404).json(resp);
+      return;
+    }
+
+    if (sourceNew.balance < CheckTransaction.amount) {
+      let resp = ResponseTemplate(
+        null,
+        "balance new source not enough",
+        null,
+        400
+      );
+      res.status(400).json(resp);
+      return;
+    }
+
+    const sourceOld = await prisma.bankAccounts.update({
+      where: { bank_account_number: source.bank_account_number },
+      data: { balance: { increment: CheckTransaction.amount } },
+    });
+
+    const destinationOld = await prisma.bankAccounts.update({
+      where: { bank_account_number: destination.bank_account_number },
+      data: { balance: { decrement: CheckTransaction.amount } },
+    });
+
+    await prisma.bankAccounts.update({
+      where: { bank_account_number: sourceNew.bank_account_number },
+      data: { balance: { decrement: CheckTransaction.amount } },
+    });
+
+    await prisma.bankAccounts.update({
+      where: { bank_account_number: destinationNew.bank_account_number },
+      data: { balance: { increment: CheckTransaction.amount } },
+    });
+  } else if (amount) {
+    payload.amount = Number(amount);
+
+    if (source.balance < payload.amount) {
+      let resp = ResponseTemplate(null, "balance source not enough", null, 400);
+      res.status(400).json(resp);
+      return;
+    }
+
+    const sourceOld = await prisma.bankAccounts.update({
+      where: { bank_account_number: source.bank_account_number },
+      data: { balance: { increment: CheckTransaction.amount } },
+    });
+
+    const destinationOld = await prisma.bankAccounts.update({
+      where: { bank_account_number: destination.bank_account_number },
+      data: { balance: { decrement: CheckTransaction.amount } },
+    });
+
+    await prisma.bankAccounts.update({
+      where: { bank_account_number: source.bank_account_number },
+      data: { balance: { decrement: payload.amount } },
+    });
+
+    await prisma.bankAccounts.update({
+      where: { bank_account_number: destination.bank_account_number },
+      data: { balance: { increment: payload.amount } },
+    });
+  } else if (destination_bank_number) {
+    payload.destination_bank_number = destination_bank_number;
+
+    const sourceNew = await prisma.bankAccounts.findUnique({
+      where: { bank_account_number: CheckTransaction.source_bank_number },
+    });
+    const destinationNew = await prisma.bankAccounts.findUnique({
+      where: { bank_account_number: payload.destination_bank_number },
+    });
+
+    if (!destinationNew) {
+      let resp = ResponseTemplate(
+        null,
+        "New destination account not found",
+        null,
+        404
+      );
+      res.status(404).json(resp);
+      return;
+    }
+
+    if (sourceNew.balance < CheckTransaction.amount) {
+      let resp = ResponseTemplate(null, "balance source not enough", null, 400);
+      res.status(400).json(resp);
+      return;
+    }
+
+    const sourceOld = await prisma.bankAccounts.update({
+      where: { bank_account_number: source.bank_account_number },
+      data: { balance: { increment: CheckTransaction.amount } },
+    });
+
+    const destinationOld = await prisma.bankAccounts.update({
+      where: { bank_account_number: destination.bank_account_number },
+      data: { balance: { decrement: CheckTransaction.amount } },
+    });
+
+    await prisma.bankAccounts.update({
+      where: { bank_account_number: sourceNew.bank_account_number },
+      data: { balance: { decrement: CheckTransaction.amount } },
+    });
+
+    await prisma.bankAccounts.update({
+      where: { bank_account_number: destinationNew.bank_account_number },
+      data: { balance: { increment: CheckTransaction.amount } },
+    });
+  } else if (source_bank_number) {
+    payload.source_bank_number = source_bank_number;
+
+    const sourceNew = await prisma.bankAccounts.findUnique({
+      where: { bank_account_number: payload.source_bank_number },
+    });
+    const destinationNew = await prisma.bankAccounts.findUnique({
+      where: { bank_account_number: CheckTransaction.destination_bank_number },
+    });
+
+    if (!sourceNew) {
+      let resp = ResponseTemplate(null, "Source account not found", null, 404);
+      res.status(404).json(resp);
+      return;
+    }
+
+    if (sourceNew.balance < payload.amount) {
+      let resp = ResponseTemplate(
+        null,
+        "balance new source not enough",
+        null,
+        400
+      );
+      res.status(400).json(resp);
+      return;
+    }
+
+    const sourceOld = await prisma.bankAccounts.update({
+      where: { bank_account_number: source.bank_account_number },
+      data: { balance: { increment: CheckTransaction.amount } },
+    });
+
+    const destinationOld = await prisma.bankAccounts.update({
+      where: { bank_account_number: destination.bank_account_number },
+      data: { balance: { decrement: CheckTransaction.amount } },
+    });
+
+    await prisma.bankAccounts.update({
+      where: { bank_account_number: sourceNew.bank_account_number },
+      data: { balance: { decrement: CheckTransaction.amount } },
+    });
+
+    await prisma.bankAccounts.update({
+      where: { bank_account_number: destinationNew.bank_account_number },
+      data: { balance: { increment: CheckTransaction.amount } },
+    });
+  }
 
   try {
     const transaction = await prisma.transactions.update({
@@ -356,9 +745,79 @@ async function AdminUpdate(req, res) {
   }
 }
 
+async function AdminDelete(req, res) {
+  const { id } = req.params;
+
+  try {
+    const CheckTransaction = await prisma.transactions.findFirst({
+      where: {
+        id: Number(id),
+      },
+    });
+
+    if (CheckTransaction === null || CheckTransaction.deletedAt !== null) {
+      let resp = ResponseTemplate(null, "data not found", null, 404);
+      res.status(404).json(resp);
+      return;
+    }
+
+    const transaction = await prisma.transactions.update({
+      where: {
+        id: Number(id),
+      },
+      data: {
+        deletedAt: new Date(),
+      },
+      select: {
+        id: true,
+        source_bank_number: true,
+        bank_account_source: {
+          select: {
+            bank_name: true,
+            bank_account_number: true,
+            user: {
+              select: {
+                name: true,
+              },
+            },
+          },
+        },
+        destination_bank_number: true,
+        bank_account_destination: {
+          select: {
+            bank_name: true,
+            bank_account_number: true,
+            user: {
+              select: {
+                name: true,
+              },
+            },
+          },
+        },
+        amount: true,
+        deletedAt: true,
+      },
+    });
+
+    let resp = ResponseTemplate(
+      transaction,
+      "success, data deleted",
+      null,
+      200
+    );
+    res.status(200).json(resp);
+    return;
+  } catch (error) {
+    let resp = ResponseTemplate(null, "internal server error", error, 500);
+    res.status(500).json(resp);
+    return;
+  }
+}
+
 module.exports = {
   Insert,
-  AdminGet,
   Get,
+  AdminGet,
   AdminUpdate,
+  AdminDelete,
 };

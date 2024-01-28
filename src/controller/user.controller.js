@@ -145,35 +145,35 @@ async function Update(req, res) {
 
 async function Delete(req, res) {
   try {
-    const user = await prisma.bankAccounts.updateMany({
-      where: {
-        user_id: Number(req.user.id),
-        deletedAt: null,
-      },
-      data: {
-        deletedAt: new Date(),
-      }
-    });
+    // const user = await prisma.bankAccounts.updateMany({
+    //   where: {
+    //     user_id: Number(req.user.id),
+    //     deletedAt: null,
+    //   },
+    //   data: {
+    //     deletedAt: new Date(),
+    //   }
+    // });
 
-    await prisma.transactions.updateMany({
-      where: {
-        source_bank_number: user.bank_account_number,
-        deletedAt: null,
-      },
-      data: {
-        deletedAt: new Date(),
-      },
-    });
+    // await prisma.transactions.updateMany({
+    //   where: {
+    //     source_bank_number: user.bank_account_number,
+    //     deletedAt: null,
+    //   },
+    //   data: {
+    //     deletedAt: new Date(),
+    //   },
+    // });
 
-    await prisma.transactions.updateMany({
-      where: {
-        destination_bank_number: user.bank_account_number,
-        deletedAt: null,
-      },
-      data: {
-        deletedAt: new Date(),
-      },
-    });
+    // await prisma.transactions.updateMany({
+    //   where: {
+    //     destination_bank_number: user.bank_account_number,
+    //     deletedAt: null,
+    //   },
+    //   data: {
+    //     deletedAt: new Date(),
+    //   },
+    // });
 
     await prisma.profile.update({
       where: {
@@ -222,6 +222,7 @@ async function Delete(req, res) {
 }
 
 async function GetUser(req, res) {
+
   const {
     name,
     email,
@@ -418,35 +419,35 @@ async function DeleteUser(req, res) {
       return;
     }
 
-    const user = await prisma.bankAccounts.updateMany({
-      where: {
-        user_id: Number(id),
-        deletedAt: null,
-      },
-      data: {
-        deletedAt: new Date(),
-      },
-    });
+    // const user = await prisma.bankAccounts.updateMany({
+    //   where: {
+    //     user_id: Number(id),
+    //     deletedAt: null,
+    //   },
+    //   data: {
+    //     deletedAt: new Date(),
+    //   },
+    // });
 
-    await prisma.transactions.updateMany({
-      where: {
-        source_bank_number: user.bank_account_number,
-        deletedAt: null,
-      },
-      data: {
-        deletedAt: new Date(),
-      },
-    });
+    // await prisma.transactions.updateMany({
+    //   where: {
+    //     source_bank_number: user.bank_account_number,
+    //     deletedAt: null,
+    //   },
+    //   data: {
+    //     deletedAt: new Date(),
+    //   },
+    // });
 
-    await prisma.transactions.updateMany({
-      where: {
-        destination_bank_number: user.bank_account_number,
-        deletedAt: null,
-      },
-      data: {
-        deletedAt: new Date(),
-      },
-    });
+    // await prisma.transactions.updateMany({
+    //   where: {
+    //     destination_bank_number: user.bank_account_number,
+    //     deletedAt: null,
+    //   },
+    //   data: {
+    //     deletedAt: new Date(),
+    //   },
+    // });
 
     await prisma.profile.update({
       where: {
