@@ -135,7 +135,7 @@ router.get("/users/admin/", Auth, Admin, midd_adminGet, GetUser);
 
 /**
  * @swagger
- * /api/v2/user/admin/{id}:
+ * /api/v2/users/admin/{id}:
  *   put:
  *     security:
  *      - bearerAuth: []
@@ -178,7 +178,7 @@ router.get("/users/admin/", Auth, Admin, midd_adminGet, GetUser);
  *         description: Bad request
  */
 router.put(
-  "/user/admin/:id",
+  "/users/admin/:id",
   Auth,
   Admin,
   multer.single("profile_picture"),
@@ -189,7 +189,7 @@ router.put(
 
 /**
  * @swagger
- * /api/v2/user/admin/{id}:
+ * /api/v2/users/admin/{id}:
  *   delete:
  *     security:
  *      - bearerAuth: []
@@ -209,6 +209,6 @@ router.put(
  *       404:
  *         description: Not found
  */
-router.delete("/user/admin/:id", Auth, Admin, midd_id, DeleteUser);
+router.delete("/users/admin/:id", Auth, Admin, midd_id, DeleteUser);
 
 module.exports = router;

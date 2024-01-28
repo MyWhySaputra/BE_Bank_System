@@ -14,7 +14,7 @@
     <body>
         <div class="hero min-h-screen bg-base-200">
         <div class="hero-content">
-            <div class="max-w-md">
+            <div class="max-w-xl">
             <h1 class="text-5xl font-bold">Welcome!</h1>
             <p class="py-6">
                 This is a Bank System API. It's a simple REST API. You can use it to create, read, update, and delete.
@@ -24,27 +24,35 @@
                 <pre
                 data-prefix="1"
                 class="text-sm px-4 my-2"
-                ><code class="text-green-700">// Register Admin</code></pre>
+                ><code class="text-green-700">// Register User or Admin</code></pre>
                 <pre
                 data-prefix="2"
                 class="text-sm px-4 my-2"
-                ><code><span class="text-green-500">POST</span> /api/v2/admin</code></pre>
+                ><code><span class="text-green-500">POST</span> /api/v2/auth/register</code></pre>
                 <pre
                 data-prefix="3"
                 class="text-sm px-4 my-2"
-                ><code class="text-green-700">// Register User</code></pre>
+                ><code class="text-green-700">// Get all User</code></pre>
                 <pre
                 data-prefix="4"
                 class="text-sm px-4 my-2"
-                ><code><span class="text-green-500">POST</span> /api/v2/user</code></pre>
+                ><code><span class="text-blue-500">GET</span> /api/v2/users/admin</code></pre>
                 <pre
                 data-prefix="5"
                 class="text-sm px-4 my-2"
-                ><code class="text-green-700">// Login</code></pre>
+                ><code class="text-green-700">// Update User</code></pre>
                 <pre
                 data-prefix="6"
                 class="text-sm px-4 my-2"
-                ><code><span class="text-green-500">POST</span> /api/v2/auth/login</code></pre>
+                ><code><span class="text-yellow-500">PUT</span> /api/v2/users/admin/:id</code></pre>
+                <pre
+                data-prefix="7"
+                class="text-sm px-4 my-2"
+                ><code class="text-green-700">// Delete User</code></pre>
+                <pre
+                data-prefix="8"
+                class="text-sm px-4 my-2"
+                ><code><span class="text-red-500">DELETE</span> /api/v2/users/admin/:id</code></pre>
             </div>
             <a href="/docs" target="_blank" class="btn btn-primary"
                 >More Documentation
