@@ -22,7 +22,7 @@
 
 # REST API
 
-This is a Banking system API. It's a simple REST API. You can use it to create, read, update, and delete.
+This is a Banking system API. It's a simple REST API. You can use it to create, read, update, and delete..
 
 ## Create Admin
 
