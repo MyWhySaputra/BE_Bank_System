@@ -31,6 +31,15 @@ const {
  *     tags:
  *      - "Bank Account"
  *     summary: Create your bank account
+ *     description: |
+ *       **API Registration Public (No token required to access)**
+ *       
+ *       Used for user registration so they can log in to the application.
+ *       
+ *       *Requirements:*
+ *       1. The email parameter must be validated for email format.
+ *       2. The password parameter must have a minimum length of 8 characters.
+ *       3. Handle responses according to the response documentation below.
  *     requestBody:
  *        required: true
  *        content:
@@ -47,10 +56,51 @@ const {
  *     responses:
  *       200:
  *         description: Successful response
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 status:
+ *                   type: integer
+ *                   example: 0
+ *                 message:
+ *                   type: string
+ *                   example: "Registrasi berhasil silahkan login"
+ *                 data:
+ *                   type: object
+ *                   example: null
  *       400:
  *         description: Bad request
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 status:
+ *                   type: integer
+ *                   example: 1
+ *                 message:
+ *                   type: string
+ *                   example: "Bad request, please check your input"
+ *                 errors:
+ *                   type: array
+ *                   items:
+ *                     type: string
+ *                     example: "Email is not valid"
  *       404:
  *         description: Not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 status:
+ *                   type: integer
+ *                   example: 1
+ *                 message:
+ *                   type: string
+ *                   example: "Resource not found"
  */
 router.post("/bank_accounts/", Auth, midd_bank_accountInsert, Insert);
 
