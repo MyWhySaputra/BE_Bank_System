@@ -41,6 +41,8 @@ const multer = require("multer")();
  *         description: Successful response
  *       404:
  *         description: Not found
+ *       400:
+ *         description: Bad request
  *       500:
  *         description: Internal server error
  */
