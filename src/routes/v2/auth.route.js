@@ -71,6 +71,8 @@ router.post("/auth/register", multer.single("profile_picture"), midd_register, r
  *         description: Successful response
  *       400:
  *         description: Bad request
+ *       500:
+ *         description: Internal server error
  */
 router.post('/auth/login', midd_login, login)
 
