@@ -99,6 +99,8 @@ router.get('/auth/verify-email', verifyEmail)
  *         description: Successful response
  *       400:
  *         description: Bad request
+ *       500:
+ *         description: Internal server error
  */
 router.post('/auth/forget-password', midd_forget, forgetPassword)
 
