@@ -101,6 +101,19 @@ const {
  *                 message:
  *                   type: string
  *                   example: "Resource not found"
+ *       500:
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 status:
+ *                   type: integer
+ *                   example: 1
+ *                 message:
+ *                   type: string
+ *                   example: "Internal server error"
  */
 router.post("/bank_accounts/", Auth, midd_bank_accountInsert, Insert);
 
