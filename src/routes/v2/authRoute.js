@@ -1,7 +1,17 @@
-const express = require('express')
-const router = express.Router()
-const { login, register, verifyEmail, forgetPassword, resetPassword } = require('../../controller/auth.controller')
-const { midd_register, midd_login, midd_forget } = require('../../middleware/middleware')
+const express = require("express");
+const router = express.Router();
+const {
+  login,
+  register,
+  verifyEmail,
+  forgetPassword,
+  resetPassword,
+} = require("../../controllers/v2/authController");
+const {
+  midd_register,
+  midd_login,
+  midd_forget,
+} = require("../../middlewares/v2/authMiddleware");
 
 const multer = require("multer")();
 
@@ -46,7 +56,12 @@ const multer = require("multer")();
  *       500:
  *         description: Internal server error
  */
-router.post("/auth/register", multer.single("profile_picture"), midd_register, register);
+router.post(
+  "/auth/register",
+  multer.single("profile_picture"),
+  midd_register,
+  register
+);
 
 /**
  * @swagger
@@ -74,9 +89,9 @@ router.post("/auth/register", multer.single("profile_picture"), midd_register, r
  *       500:
  *         description: Internal server error
  */
-router.post('/auth/login', midd_login, login)
+router.post("/auth/login", midd_login, login);
 
-router.get('/auth/verify-email', verifyEmail)
+router.get("/auth/verify-email", verifyEmail);
 
 /**
  * @swagger
@@ -102,13 +117,13 @@ router.get('/auth/verify-email', verifyEmail)
  *       500:
  *         description: Internal server error
  */
-router.post('/auth/forget-password', midd_forget, forgetPassword)
+router.post("/auth/forget-password", midd_forget, forgetPassword);
 
 router.get("/auth/reset-password", (req, res) => {
-    const token = req.query.token
-    res.render("reset-password.ejs", { token })
-})
+  const token = req.query.token;
+  res.render("resetPassword.ejs", { token });
+});
 
-router.post('/auth/reset-password', resetPassword)
+router.post("/auth/reset-password", resetPassword);
 
-module.exports = router
+module.exports = router;

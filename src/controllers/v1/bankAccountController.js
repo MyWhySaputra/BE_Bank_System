@@ -1,4 +1,4 @@
-const { ResponseTemplate } = require("../helper/template.helper");
+const { ResponseTemplate } = require("../../helpers/templateHelper");
 const { PrismaClient } = require("@prisma/client");
 
 const prisma = new PrismaClient();
@@ -265,10 +265,15 @@ async function Delete(req, res) {
         bank_account_number: true,
         balance: true,
         deletedAt: true,
-      }
+      },
     });
 
-    let resp = ResponseTemplate(bankAccount, "success, data deleted", null, 200);
+    let resp = ResponseTemplate(
+      bankAccount,
+      "success, data deleted",
+      null,
+      200
+    );
     res.status(200).json(resp);
     return;
   } catch (error) {
@@ -568,7 +573,12 @@ async function AdminDelete(req, res) {
       },
     });
 
-    let resp = ResponseTemplate(bankAccount, "success, data deleted", null, 200);
+    let resp = ResponseTemplate(
+      bankAccount,
+      "success, data deleted",
+      null,
+      200
+    );
     res.status(200).json(resp);
     return;
   } catch (error) {

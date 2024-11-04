@@ -1,4 +1,4 @@
-const { ResponseTemplate } = require("../helper/template.helper");
+const { ResponseTemplate } = require("../../helpers/templateHelper");
 const { PrismaClient } = require("@prisma/client");
 
 const prisma = new PrismaClient();

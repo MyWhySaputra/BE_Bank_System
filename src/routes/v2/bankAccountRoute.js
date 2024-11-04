@@ -9,18 +9,17 @@ const {
   Update,
   AdminDelete,
   Delete,
-} = require("../../controller/bank.account.controller");
+} = require("../../controllers/v2/bankAccountController");
+const { Auth, Admin, midd_id } = require("../../middlewares/v2/authMiddleware");
+
 const {
-  Auth,
-  Admin,
-  midd_id,
   midd_bank_accountInsert,
   midd_bank_accountGet,
   midd_bank_accountUpdate,
   midd_bank_accountAdminInsert,
   midd_bank_accountAdminGet,
   midd_bank_accountAdminUpdate,
-} = require("../../middleware/middleware");
+} = require("../../middlewares/v2/bankAccountMiddleware");
 
 /**
  * @swagger
@@ -33,9 +32,9 @@ const {
  *     summary: Create your bank account
  *     description: |
  *       **API Registration Public (No token required to access)**
- *       
+ *
  *       Used for user registration so they can log in to the application.
- *       
+ *
  *       *Requirements:*
  *       1. The email parameter must be validated for email format.
  *       2. The password parameter must have a minimum length of 8 characters.
@@ -188,7 +187,13 @@ router.get("/bank_accounts/", Auth, midd_bank_accountGet, Get);
  *       400:
  *         description: Bad request
  */
-router.put("/bank_accounts/:id", Auth, midd_id, midd_bank_accountUpdate, Update);
+router.put(
+  "/bank_accounts/:id",
+  Auth,
+  midd_id,
+  midd_bank_accountUpdate,
+  Update
+);
 
 /**
  * @swagger
@@ -246,7 +251,13 @@ router.delete("/bank_accounts/:id", Auth, midd_id, Delete);
  *       404:
  *         description: Not found
  */
-router.post("/bank_accounts/admin/", Auth, Admin, midd_bank_accountAdminInsert, AdminInsert);
+router.post(
+  "/bank_accounts/admin/",
+  Auth,
+  Admin,
+  midd_bank_accountAdminInsert,
+  AdminInsert
+);
 
 /**
  * @swagger
@@ -288,7 +299,13 @@ router.post("/bank_accounts/admin/", Auth, Admin, midd_bank_accountAdminInsert, 
  *       404:
  *         description: Not found
  */
-router.get("/bank_accounts/admin/", Auth, Admin, midd_bank_accountAdminGet, AdminGet);
+router.get(
+  "/bank_accounts/admin/",
+  Auth,
+  Admin,
+  midd_bank_accountAdminGet,
+  AdminGet
+);
 
 /**
  * @swagger
@@ -327,7 +344,14 @@ router.get("/bank_accounts/admin/", Auth, Admin, midd_bank_accountAdminGet, Admi
  *       400:
  *         description: Bad request
  */
-router.put("/bank_accounts/admin/:id", Auth, Admin, midd_id, midd_bank_accountAdminUpdate, AdminUpdate);
+router.put(
+  "/bank_accounts/admin/:id",
+  Auth,
+  Admin,
+  midd_id,
+  midd_bank_accountAdminUpdate,
+  AdminUpdate
+);
 
 /**
  * @swagger

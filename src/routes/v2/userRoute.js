@@ -7,8 +7,13 @@ const {
   GetUser,
   UpdateUser,
   DeleteUser,
-} = require("../../controller/user.controller");
-const { Auth, Admin, midd_id, midd_Update, midd_adminGet } = require("../../middleware/middleware");
+} = require("../../controllers/v2/userController");
+const { Auth, Admin, midd_id } = require("../../middlewares/v2/authMiddleware");
+
+const {
+  midd_Update,
+  midd_adminGet,
+} = require("../../middlewares/v2/userMiddleware");
 
 const multer = require("multer")();
 
@@ -66,7 +71,13 @@ router.get("/users/", Auth, Get);
  *       400:
  *         description: Bad request
  */
-router.put("/users/", Auth, multer.single("profile_picture"), midd_Update, Update);
+router.put(
+  "/users/",
+  Auth,
+  multer.single("profile_picture"),
+  midd_Update,
+  Update
+);
 
 /**
  * @swagger

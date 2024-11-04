@@ -1,7 +1,7 @@
-const { ResponseTemplate } = require("../helper/template.helper");
+const { ResponseTemplate } = require("../../helpers/templateHelper");
 const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
-const imagekit = require("../lib/imagekit");
+const imagekit = require("../../lib/imagekit");
 
 const { DateTime } = require("luxon");
 
@@ -9,12 +9,11 @@ async function Get(req, res) {
   const id = req.user.id;
 
   try {
-
     const checkUser = await prisma.user.findUnique({
       where: {
         id: Number(id),
-      }
-    })
+      },
+    });
 
     const usersView = await prisma.user.findUnique({
       where: {
@@ -185,8 +184,8 @@ async function Delete(req, res) {
     const checkUser = await prisma.user.findUnique({
       where: {
         id: Number(req.user.id),
-      }
-    })
+      },
+    });
 
     await prisma.profile.update({
       where: {
@@ -194,7 +193,7 @@ async function Delete(req, res) {
       },
       data: {
         deletedAt: new Date(),
-      }
+      },
     });
 
     const timestamp = DateTime.now().toMillis();
@@ -224,7 +223,12 @@ async function Delete(req, res) {
       },
     });
 
-    let resp = ResponseTemplate(userView, "data successfully deleted", null, 200);
+    let resp = ResponseTemplate(
+      userView,
+      "data successfully deleted",
+      null,
+      200
+    );
     res.status(200).json(resp);
     return;
   } catch (error) {
@@ -235,7 +239,6 @@ async function Delete(req, res) {
 }
 
 async function GetUser(req, res) {
-
   const {
     name,
     email,
@@ -498,7 +501,12 @@ async function DeleteUser(req, res) {
       },
     });
 
-    let resp = ResponseTemplate(userView, "data successfully deleted", null, 200);
+    let resp = ResponseTemplate(
+      userView,
+      "data successfully deleted",
+      null,
+      200
+    );
     res.status(200).json(resp);
     return;
   } catch (error) {

@@ -1,16 +1,18 @@
 const express = require('express')
-const authRouteV1 = require('./v1/auth.route')
-const userRouteV1 = require('./v1/user.route')
-const authRouteV2 = require('./v2/auth.route')
-const userRouteV2 = require('./v2/user.route')
-const bankAccountRouteV2 = require('./v2/bank.account.route')
-const transactionRouteV2 = require('./v2/transaction.route')
+const authRouteV1 = require('./v1/authRoute')
+const userRouteV1 = require('./v1/userRoute')
+const bankAccountRouteV1 = require("./v1/bankAccountRoute");
+const transactionRouteV1 = require("./v1/transactionRoute");
+const authRouteV2 = require('./v2/authRoute')
+const userRouteV2 = require('./v2/userRoute')
+const bankAccountRouteV2 = require('./v2/bankAccountRoute')
+const transactionRouteV2 = require('./v2/transactionRoute')
 const morgan = require('morgan')
 
 // version 1 
 const v1 = express.Router()
 v1.use(morgan('dev'));
-v1.use('/', [authRouteV1, userRouteV1])
+v1.use('/', [authRouteV1, userRouteV1, bankAccountRouteV1, transactionRouteV1])
 
 // version 2
 const v2 = express.Router()

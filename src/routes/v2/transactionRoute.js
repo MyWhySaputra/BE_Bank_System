@@ -6,16 +6,15 @@ const {
   AdminGet,
   AdminUpdate,
   AdminDelete,
-} = require("../../controller/transaction.controller");
+} = require("../../controllers/v2/transactionController");
+const { Auth, Admin, midd_id } = require("../../middlewares/v2/authMiddleware");
+
 const {
-  Auth,
-  Admin,
-  midd_id,
   midd_trasactionInsert,
   midd_trasactionGet,
   midd_trasactionAdminGet,
   midd_trasactionAdminUpdate,
-} = require("../../middleware/middleware");
+} = require("../../middlewares/v2/transactionMiddleware");
 
 /**
  * @swagger
@@ -105,7 +104,13 @@ router.get("/transactions/", Auth, midd_trasactionGet, Get);
  *       200:
  *         description: Successful response
  */
-router.get("/transactions/admin/", Auth, Admin, midd_trasactionAdminGet, AdminGet);
+router.get(
+  "/transactions/admin/",
+  Auth,
+  Admin,
+  midd_trasactionAdminGet,
+  AdminGet
+);
 
 /**
  * @swagger
@@ -140,7 +145,14 @@ router.get("/transactions/admin/", Auth, Admin, midd_trasactionAdminGet, AdminGe
  *       200:
  *         description: Successful response
  */
-router.put("/transactions/admin/:id", Auth, Admin, midd_id, midd_trasactionAdminUpdate, AdminUpdate);
+router.put(
+  "/transactions/admin/:id",
+  Auth,
+  Admin,
+  midd_id,
+  midd_trasactionAdminUpdate,
+  AdminUpdate
+);
 
 /**
  * @swagger

@@ -1,15 +1,25 @@
-const { ComparePassword, HashPassword } = require("../helper/hash_pass_helper");
-const { ResponseTemplate } = require("../helper/template.helper");
+const {
+  ComparePassword,
+  HashPassword,
+} = require("../../helpers/hashPassHelper");
+const { ResponseTemplate } = require("../../helpers/templateHelper");
 const { PrismaClient } = require("@prisma/client");
 
 const prisma = new PrismaClient();
-const imagekit = require("../lib/imagekit");
-const transporter = require("../lib/nodemailer");
+const imagekit = require("../../lib/imagekit");
+const transporter = require("../../lib/nodemailer");
 var jwt = require("jsonwebtoken");
 
 async function register(req, res) {
-  const { name, email, password, role, identity_type, identity_number, address } =
-    req.body;
+  const {
+    name,
+    email,
+    password,
+    role,
+    identity_type,
+    identity_number,
+    address,
+  } = req.body;
 
   const hashPass = await HashPassword(password);
 
@@ -216,7 +226,12 @@ async function forgetPassword(req, res) {
       html: `<a href="${process.env.BASE_URL}/api/v2/auth/reset-password?token=${token}">Click here to reset password</a>`,
     });
 
-    let resp = ResponseTemplate(null, "success, please check your email", null, 200);
+    let resp = ResponseTemplate(
+      null,
+      "success, please check your email",
+      null,
+      200
+    );
     res.status(200).json(resp);
     return;
   } catch (error) {

@@ -6,7 +6,16 @@ const app = express();
 const router = require("./src/routes/routes");
 
 const swaggerUi = require("swagger-ui-express");
-const swagger = require("./src/helper/swagger.helper");
+const swaggerV1 = require("./src/helpers/swaggerHelperV1");
+const swaggerV2 = require("./src/helpers/swaggerHelperV2");
+
+const CSS_URL =
+  "https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/5.11.0/swagger-ui.min.css";
+
+const options = {
+  customCss: ".swagger-ui .topbar { display: none }",
+  customCssUrl: CSS_URL,
+};
 
 const cors = require("cors");
 
@@ -25,7 +34,16 @@ const corsOptions = {
 app.use(cors(corsOptions));
 
 app.use("/", router);
-app.use("/docs", swaggerUi.serve, swagger);
+app.use(
+  "/docs/v1",
+  swaggerUi.serveFiles(swaggerV1),
+  swaggerUi.setup(swaggerV1, options)
+);
+app.use(
+  "/docs",
+  swaggerUi.serveFiles(swaggerV2),
+  swaggerUi.setup(swaggerV2, options)
+);
 
 app.get("/", (req, res) => {
   res.render("home.ejs");
