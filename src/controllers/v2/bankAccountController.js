@@ -4,16 +4,16 @@ const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
 
 async function Insert(req, res) {
-  const { bank_name, bank_account_number, balance } = req.body;
-
-  const payload = {
-    user_id: req.user.id,
-    bank_name,
-    bank_account_number,
-    balance: Number(balance),
-  };
-
   try {
+    const { bank_name, bank_account_number, balance } = req.body;
+
+    const payload = {
+      user_id: req.user.id,
+      bank_name,
+      bank_account_number,
+      balance: Number(balance),
+    };
+
     const checkBankNumber = await prisma.bankAccounts.findFirst({
       where: {
         bank_account_number: bank_account_number,
@@ -54,26 +54,26 @@ async function Insert(req, res) {
 }
 
 async function Get(req, res) {
-  const {
-    bank_name,
-    bank_account_number,
-    balance,
-    page = 1,
-    limit = 10,
-  } = req.query;
-
-  const user_id = req.user.id;
-
-  const payload = {};
-
-  if (user_id) payload.user_id = user_id;
-  if (bank_name) payload.bank_name = bank_name;
-  if (bank_account_number) payload.bank_account_number = bank_account_number;
-  if (balance) payload.balance = Number(balance);
-
-  payload.deletedAt = null;
-
   try {
+    const {
+      bank_name,
+      bank_account_number,
+      balance,
+      page = 1,
+      limit = 10,
+    } = req.query;
+
+    const user_id = req.user.id;
+
+    const payload = {};
+
+    if (user_id) payload.user_id = user_id;
+    if (bank_name) payload.bank_name = bank_name;
+    if (bank_account_number) payload.bank_account_number = bank_account_number;
+    if (balance) payload.balance = Number(balance);
+
+    payload.deletedAt = null;
+
     let skip = (page - 1) * limit;
 
     //informasi total data keseluruhan
@@ -141,36 +141,36 @@ async function Get(req, res) {
 }
 
 async function Update(req, res) {
-  const { bank_name, bank_account_number, balance } = req.body;
-  const user_id = req.user.id;
-  const { id } = req.params;
-
-  const check = await prisma.bankAccounts.findUnique({
-    where: {
-      id: Number(id),
-    },
-  });
-
-  if (check === null || check.deletedAt !== null) {
-    let resp = ResponseTemplate(null, "data not found", null, 404);
-    res.status(404).json(resp);
-    return;
-  }
-
-  const payload = {};
-
-  if (!user_id && !bank_name && !bank_account_number && !balance) {
-    let resp = ResponseTemplate(null, "bad request", null, 400);
-    res.json(resp);
-    return;
-  }
-
-  if (user_id) payload.user_id = user_id;
-  if (bank_name) payload.bank_name = bank_name;
-  if (bank_account_number) payload.bank_account_number = bank_account_number;
-  if (balance) payload.balance = balance;
-
   try {
+    const { bank_name, bank_account_number, balance } = req.body;
+    const user_id = req.user.id;
+    const { id } = req.params;
+
+    const check = await prisma.bankAccounts.findUnique({
+      where: {
+        id: Number(id),
+      },
+    });
+
+    if (check === null || check.deletedAt !== null) {
+      let resp = ResponseTemplate(null, "data not found", null, 404);
+      res.status(404).json(resp);
+      return;
+    }
+
+    const payload = {};
+
+    if (!user_id && !bank_name && !bank_account_number && !balance) {
+      let resp = ResponseTemplate(null, "bad request", null, 400);
+      res.json(resp);
+      return;
+    }
+
+    if (user_id) payload.user_id = user_id;
+    if (bank_name) payload.bank_name = bank_name;
+    if (bank_account_number) payload.bank_account_number = bank_account_number;
+    if (balance) payload.balance = balance;
+
     const account = await prisma.bankAccounts.update({
       where: {
         id: Number(id),
@@ -197,10 +197,10 @@ async function Update(req, res) {
 }
 
 async function Delete(req, res) {
-  const { id } = req.params;
-  const user_id = req.user.id;
-
   try {
+    const { id } = req.params;
+    const user_id = req.user.id;
+
     const CheckBankAccount = await prisma.bankAccounts.findFirst({
       where: {
         id: Number(id),
@@ -284,16 +284,16 @@ async function Delete(req, res) {
 }
 
 async function AdminInsert(req, res) {
-  const { user_id, bank_name, bank_account_number, balance } = req.body;
-
-  const payload = {
-    user_id: parseInt(user_id),
-    bank_name,
-    bank_account_number,
-    balance: parseInt(balance),
-  };
-
   try {
+    const { user_id, bank_name, bank_account_number, balance } = req.body;
+
+    const payload = {
+      user_id: parseInt(user_id),
+      bank_name,
+      bank_account_number,
+      balance: parseInt(balance),
+    };
+
     const checkAccount = await prisma.bankAccounts.findFirst({
       where: {
         user_id: payload.user_id,
@@ -347,25 +347,25 @@ async function AdminInsert(req, res) {
 }
 
 async function AdminGet(req, res) {
-  const {
-    user_id,
-    bank_name,
-    bank_account_number,
-    balance,
-    page = 1,
-    limit = 10,
-  } = req.query;
-
-  const payload = {};
-
-  if (user_id) payload.user_id = Number(user_id);
-  if (bank_name) payload.bank_name = bank_name;
-  if (bank_account_number) payload.bank_account_number = bank_account_number;
-  if (balance) payload.balance = Number(balance);
-
-  payload.deletedAt = null;
-
   try {
+    const {
+      user_id,
+      bank_name,
+      bank_account_number,
+      balance,
+      page = 1,
+      limit = 10,
+    } = req.query;
+
+    const payload = {};
+
+    if (user_id) payload.user_id = Number(user_id);
+    if (bank_name) payload.bank_name = bank_name;
+    if (bank_account_number) payload.bank_account_number = bank_account_number;
+    if (balance) payload.balance = Number(balance);
+
+    payload.deletedAt = null;
+
     let skip = (page - 1) * limit;
 
     //informasi total data keseluruhan
@@ -434,35 +434,35 @@ async function AdminGet(req, res) {
 }
 
 async function AdminUpdate(req, res) {
-  const { user_id, bank_name, bank_account_number, balance } = req.body;
-  const { id } = req.params;
-
-  const checkAccount = await prisma.bankAccounts.findUnique({
-    where: {
-      id: Number(id),
-    },
-  });
-
-  if (checkAccount === null || checkAccount.deletedAt !== null) {
-    let resp = ResponseTemplate(null, "user not found", null, 404);
-    res.status(404).json(resp);
-    return;
-  }
-
-  const payload = {};
-
-  if (!user_id && !bank_name && !bank_account_number && !balance) {
-    let resp = ResponseTemplate(null, "bad request", null, 400);
-    res.status(400).json(resp);
-    return;
-  }
-
-  if (user_id) payload.user_id = Number(user_id);
-  if (bank_name) payload.bank_name = bank_name;
-  if (bank_account_number) payload.bank_account_number = bank_account_number;
-  if (balance) payload.balance = Number(balance);
-
   try {
+    const { user_id, bank_name, bank_account_number, balance } = req.body;
+    const { id } = req.params;
+
+    const checkAccount = await prisma.bankAccounts.findUnique({
+      where: {
+        id: Number(id),
+      },
+    });
+
+    if (checkAccount === null || checkAccount.deletedAt !== null) {
+      let resp = ResponseTemplate(null, "user not found", null, 404);
+      res.status(404).json(resp);
+      return;
+    }
+
+    const payload = {};
+
+    if (!user_id && !bank_name && !bank_account_number && !balance) {
+      let resp = ResponseTemplate(null, "bad request", null, 400);
+      res.status(400).json(resp);
+      return;
+    }
+
+    if (user_id) payload.user_id = Number(user_id);
+    if (bank_name) payload.bank_name = bank_name;
+    if (bank_account_number) payload.bank_account_number = bank_account_number;
+    if (balance) payload.balance = Number(balance);
+
     const account = await prisma.bankAccounts.update({
       where: {
         id: Number(id),
@@ -490,9 +490,9 @@ async function AdminUpdate(req, res) {
 }
 
 async function AdminDelete(req, res) {
-  const { id } = req.params;
-
   try {
+    const { id } = req.params;
+
     const CheckBankAccount = await prisma.bankAccounts.findFirst({
       where: {
         id: Number(id),

@@ -6,40 +6,24 @@ const { ResponseTemplate } = require("../../helpers/templateHelper");
 const { PrismaClient } = require("@prisma/client");
 
 const prisma = new PrismaClient();
-const imagekit = require("../../lib/imagekit");
 const transporter = require("../../lib/nodemailer");
 var jwt = require("jsonwebtoken");
 
 async function register(req, res) {
-  const {
-    name,
-    email,
-    password,
-    role,
-    identity_type,
-    identity_number,
-    address,
-  } = req.body;
-
-  const hashPass = await HashPassword(password);
-
-  const emailUser = await prisma.user.findUnique({
-    where: { email: email },
-  });
-
-  if (emailUser) {
-    let resp = ResponseTemplate(null, "Email already exist", null, 404);
-    res.status(404).json(resp);
-    return;
-  }
-
   try {
-    const stringFile = req.file.buffer.toString("base64");
+    const { name, email, password, role } = req.body;
 
-    const uploadFile = await imagekit.upload({
-      fileName: req.file.originalname,
-      file: stringFile,
+    const hashPass = await HashPassword(password);
+
+    const emailUser = await prisma.user.findUnique({
+      where: { email: email },
     });
+
+    if (emailUser) {
+      let resp = ResponseTemplate(null, "Email already exist", null, 404);
+      res.status(404).json(resp);
+      return;
+    }
 
     await prisma.user.create({
       data: {
@@ -47,17 +31,6 @@ async function register(req, res) {
         email: email,
         password: hashPass,
         role: role,
-        profile: {
-          create: {
-            profile_picture: uploadFile.url,
-            identity_type: identity_type,
-            identity_number: identity_number,
-            address: address,
-          },
-        },
-      },
-      include: {
-        profile: true,
       },
     });
 
@@ -84,14 +57,6 @@ async function register(req, res) {
         id: true,
         name: true,
         email: true,
-        profile: {
-          select: {
-            profile_picture: true,
-            identity_type: true,
-            identity_number: true,
-            address: true,
-          },
-        },
         createAt: true,
         updateAt: true,
       },
@@ -166,9 +131,9 @@ async function login(req, res) {
 }
 
 async function verifyEmail(req, res) {
-  const { token } = req.query;
-
   try {
+    const { token } = req.query;
+
     const user = await jwt.verify(token, process.env.SECRET_KEY);
 
     await prisma.user.update({
@@ -196,9 +161,9 @@ async function verifyEmail(req, res) {
 }
 
 async function forgetPassword(req, res) {
-  const { email } = req.body;
-
   try {
+    const { email } = req.body;
+
     const checkUser = await prisma.user.findUnique({
       where: {
         email: email,
@@ -242,11 +207,11 @@ async function forgetPassword(req, res) {
 }
 
 async function resetPassword(req, res) {
-  const { token, newPassword } = req.body;
-
-  const HashNewPass = await HashPassword(newPassword);
-
   try {
+    const { token, newPassword } = req.body;
+
+    const HashNewPass = await HashPassword(newPassword);
+
     const user = await jwt.verify(token, process.env.SECRET_KEY);
 
     await prisma.user.update({

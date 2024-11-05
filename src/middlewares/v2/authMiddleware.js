@@ -70,9 +70,6 @@ function midd_register(req, res, next) {
       email: Joi.string().email().required(),
       password: Joi.string().min(6).required(),
       role: Joi.string().valid("USER", "ADMIN").required(),
-      identity_type: Joi.string().valid("KTP", "SIM").required(),
-      identity_number: Joi.string().min(14).required(),
-      address: Joi.string().required(),
     });
 
     const { error } = schema.validate(req.body);

@@ -6,9 +6,9 @@ const imagekit = require("../../lib/imagekit");
 const { DateTime } = require("luxon");
 
 async function Get(req, res) {
-  const id = req.user.id;
-
   try {
+    const id = req.user.id;
+
     const checkUser = await prisma.user.findUnique({
       where: {
         id: Number(id),
@@ -53,54 +53,54 @@ async function Get(req, res) {
 }
 
 async function Update(req, res) {
-  const { name, email, password, identity_type, identity_number, address } =
-    req.body;
-  const id = req.user.id;
-
-  const checkUser = await prisma.user.findUnique({
-    where: {
-      id: Number(id),
-    },
-  });
-
-  if (checkUser === null || checkUser.deletedAt !== null) {
-    let resp = ResponseTemplate(null, "data not found", null, 404);
-    res.status(404).json(resp);
-    return;
-  }
-
-  const payload = {};
-  const data = {};
-  const where = { user_id: Number(id) };
-  const update = { where, data };
-  const profile = { update };
-
-  if (
-    !name &&
-    !email &&
-    !password &&
-    !req.file &&
-    !identity_type &&
-    !identity_number &&
-    !address
-  ) {
-    let resp = ResponseTemplate(null, "bad request", null, 400);
-    res.status(400).json(resp);
-    return;
-  }
-
-  if (name) payload.name = name;
-  if (email) payload.email = email;
-  if (password) {
-    const hashPass = await HashPassword(password);
-    payload.password = hashPass;
-  }
-  if (identity_type || identity_number || address) payload.profile = profile;
-  if (identity_type) data.identity_type = identity_type;
-  if (identity_number) data.identity_number = identity_number;
-  if (address) data.address = address;
-
   try {
+    const { name, email, password, identity_type, identity_number, address } =
+      req.body;
+    const id = req.user.id;
+
+    const checkUser = await prisma.user.findUnique({
+      where: {
+        id: Number(id),
+      },
+    });
+
+    if (checkUser === null || checkUser.deletedAt !== null) {
+      let resp = ResponseTemplate(null, "data not found", null, 404);
+      res.status(404).json(resp);
+      return;
+    }
+
+    const payload = {};
+    const data = {};
+    const where = { user_id: Number(id) };
+    const update = { where, data };
+    const profile = { update };
+
+    if (
+      !name &&
+      !email &&
+      !password &&
+      !req.file &&
+      !identity_type &&
+      !identity_number &&
+      !address
+    ) {
+      let resp = ResponseTemplate(null, "bad request", null, 400);
+      res.status(400).json(resp);
+      return;
+    }
+
+    if (name) payload.name = name;
+    if (email) payload.email = email;
+    if (password) {
+      const hashPass = await HashPassword(password);
+      payload.password = hashPass;
+    }
+    if (identity_type || identity_number || address) payload.profile = profile;
+    if (identity_type) data.identity_type = identity_type;
+    if (identity_number) data.identity_number = identity_number;
+    if (address) data.address = address;
+
     if (req.file) {
       const stringFile = req.file.buffer.toString("base64");
 
@@ -239,30 +239,30 @@ async function Delete(req, res) {
 }
 
 async function GetUser(req, res) {
-  const {
-    name,
-    email,
-    identity_type,
-    identity_number,
-    address,
-    page = 1,
-    limit = 10,
-  } = req.query;
-
-  const payload = {};
-  const every = {};
-  const profile = { every };
-
-  if (name) payload.name = name;
-  if (email) payload.email = email;
-  if (identity_type || identity_number || address) payload.profile = profile;
-  if (identity_type) every.identity_type = identity_type;
-  if (identity_number) every.identity_number = identity_number;
-  if (address) every.address = address;
-
-  payload.deletedAt = null;
-
   try {
+    const {
+      name,
+      email,
+      identity_type,
+      identity_number,
+      address,
+      page = 1,
+      limit = 10,
+    } = req.query;
+
+    const payload = {};
+    const every = {};
+    const profile = { every };
+
+    if (name) payload.name = name;
+    if (email) payload.email = email;
+    if (identity_type || identity_number || address) payload.profile = profile;
+    if (identity_type) every.identity_type = identity_type;
+    if (identity_number) every.identity_number = identity_number;
+    if (address) every.address = address;
+
+    payload.deletedAt = null;
+
     const skip = (page - 1) * limit;
 
     //informasi total data keseluruhan
@@ -323,54 +323,54 @@ async function GetUser(req, res) {
 }
 
 async function UpdateUser(req, res) {
-  const { name, email, password, identity_type, identity_number, address } =
-    req.body;
-  const { id } = req.params;
-
-  const checkUser = await prisma.user.findUnique({
-    where: {
-      id: Number(id),
-    },
-  });
-
-  if (checkUser === null || checkUser.deletedAt !== null) {
-    let resp = ResponseTemplate(null, "data not found", null, 404);
-    res.status(404).json(resp);
-    return;
-  }
-
-  const payload = {};
-  const data = {};
-  const where = { user_id: Number(id) };
-  const update = { where, data };
-  const profile = { update };
-
-  if (
-    !name &&
-    !email &&
-    !password &&
-    !req.file &&
-    !identity_type &&
-    !identity_number &&
-    !address
-  ) {
-    let resp = ResponseTemplate(null, "bad request", null, 400);
-    res.status(400).json(resp);
-    return;
-  }
-
-  if (name) payload.name = name;
-  if (email) payload.email = email;
-  if (password) {
-    const hashPass = await HashPassword(password);
-    payload.password = hashPass;
-  }
-  if (identity_type || identity_number || address) payload.profile = profile;
-  if (identity_type) data.identity_type = identity_type;
-  if (identity_number) data.identity_number = identity_number;
-  if (address) data.address = address;
-
   try {
+    const { name, email, password, identity_type, identity_number, address } =
+      req.body;
+    const { id } = req.params;
+
+    const checkUser = await prisma.user.findUnique({
+      where: {
+        id: Number(id),
+      },
+    });
+
+    if (checkUser === null || checkUser.deletedAt !== null) {
+      let resp = ResponseTemplate(null, "data not found", null, 404);
+      res.status(404).json(resp);
+      return;
+    }
+
+    const payload = {};
+    const data = {};
+    const where = { user_id: Number(id) };
+    const update = { where, data };
+    const profile = { update };
+
+    if (
+      !name &&
+      !email &&
+      !password &&
+      !req.file &&
+      !identity_type &&
+      !identity_number &&
+      !address
+    ) {
+      let resp = ResponseTemplate(null, "bad request", null, 400);
+      res.status(400).json(resp);
+      return;
+    }
+
+    if (name) payload.name = name;
+    if (email) payload.email = email;
+    if (password) {
+      const hashPass = await HashPassword(password);
+      payload.password = hashPass;
+    }
+    if (identity_type || identity_number || address) payload.profile = profile;
+    if (identity_type) data.identity_type = identity_type;
+    if (identity_number) data.identity_number = identity_number;
+    if (address) data.address = address;
+
     if (req.file) {
       const stringFile = req.file.buffer.toString("base64");
 
@@ -420,9 +420,9 @@ async function UpdateUser(req, res) {
 }
 
 async function DeleteUser(req, res) {
-  const { id } = req.params;
-
   try {
+    const { id } = req.params;
+
     const checkUser = await prisma.user.findUnique({
       where: {
         id: Number(id),

@@ -13,8 +13,6 @@ const {
   midd_forget,
 } = require("../../middlewares/v2/authMiddleware");
 
-const multer = require("multer")();
-
 /**
  * @swagger
  * /api/v2/auth/register:
@@ -25,7 +23,7 @@ const multer = require("multer")();
  *     requestBody:
  *        required: true
  *        content:
- *          multipart/form-data:
+ *          application/json:
  *            schema:
  *              type: object
  *              properties:
@@ -37,15 +35,6 @@ const multer = require("multer")();
  *                  type: string
  *                role:
  *                  type: string
- *                profile_picture:
- *                  type: string
- *                  format: binary
- *                identity_type:
- *                  type: string
- *                identity_number:
- *                  type: string
- *                address:
- *                  type: string
  *     responses:
  *       200:
  *         description: Successful response
@@ -56,12 +45,7 @@ const multer = require("multer")();
  *       500:
  *         description: Internal server error
  */
-router.post(
-  "/auth/register",
-  multer.single("profile_picture"),
-  midd_register,
-  register
-);
+router.post("/auth/register", midd_register, register);
 
 /**
  * @swagger
